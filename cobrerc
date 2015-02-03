@@ -1,0 +1,9 @@
+
+[cobre:calm.local]
+root_dir =~/data/cobre
+cache_dir=${root_dir}/cache
+raw_dir=${root_dir}/raw
+data_dir =${root_dir}/data
+
+[files_of_interest]
+# file match patterns
