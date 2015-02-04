@@ -58,6 +58,7 @@ PREPROC_DIR = op.expanduser(CFG['preproc_dir'])
 FSURF_DIR   = op.expanduser(CFG['fsurf_dir'])
 CACHE_DIR   = op.expanduser(CFG['cache_dir'])
 
+DATA_DIR    = PREPROC_DIR
 
 # read files_of_interest section
 FOI_CFG = rcfile(APPNAME, 'files_of_interest')
