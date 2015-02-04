@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+
+import CPAC
+CPAC.GUI.run()

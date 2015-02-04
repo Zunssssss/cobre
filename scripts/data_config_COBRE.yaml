@@ -1,0 +1,16 @@
+anatomicalTemplate  :  /Users/alexandre/data/cobre/raw/%s/%s/anat_1/mprage.nii.gz 
+
+functionalTemplate  :  /Users/alexandre/data/cobre/raw/%s/%s/rest_1/rest.nii.gz 
+
+subjectList  :  None 
+
+exclusionSubjectList  :  None 
+
+siteList  :  None 
+
+scanParametersCSV  :  None 
+
+outputSubjectListLocation  :  /Users/alexandre/Projects/bcc/cobre/scripts 
+
+subjectListName  :  ['COBRE'] 
+
