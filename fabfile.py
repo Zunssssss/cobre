@@ -19,6 +19,7 @@ pip install joblib
 from    __future__ import (absolute_import, division, print_function, unicode_literals)
 
 import  os
+import  sys
 import  shutil
 import  logging
 import  os.path                 as     op
@@ -28,6 +29,7 @@ from    subprocess              import Popen, PIPE
 
 from    boyle.files.search      import recursive_find_match
 from    boyle.files.names       import get_extension, remove_ext
+from    boyle.utils.rcfile      import rcfile
 from    boyle.utils.strings     import count_hits
 from    boyle.mhd               import copy_mhd_and_raw
 from    boyle.commands          import which
@@ -49,11 +51,12 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
 # read configurations
-APPNAME   = 'cobre'
-CFG       = rcfile(APPNAME)
-RAW_DIR   = op.expanduser(CFG['raw_dir'])
-DATA_DIR  = op.expanduser(CFG['data_dir'])
-CACHE_DIR = op.expanduser(CFG['cache_dir'])
+APPNAME     = 'cobre'
+CFG         = rcfile(APPNAME)
+RAW_DIR     = op.expanduser(CFG['raw_dir'])
+PREPROC_DIR = op.expanduser(CFG['preproc_dir'])
+FSURF_DIR   = op.expanduser(CFG['fsurf_dir'])
+CACHE_DIR   = op.expanduser(CFG['cache_dir'])
 
 
 # read files_of_interest section
@@ -246,6 +249,17 @@ def remove_files(pattern, work_dir=DATA_DIR,):
 
 @task
 def show_files(name, work_dir=DATA_DIR):
+    """Lists the files inside work_dir that match the regex value of the variable 'name' within the
+    files_of_interest section.
+
+    Parameters
+    ----------
+    name: str
+        Name of the variable in files_of_interest section.
+
+    work_dir: str
+        Path of the root folder from where to start the search.s
+    """
     cfg = rcfile(APPNAME, 'files_of_interest')
     if name not in cfg:
         print("Option {} not found in files_of_interest section.".format(name))
@@ -258,8 +272,44 @@ def show_files(name, work_dir=DATA_DIR):
     if not files:
         print('No files that match "{}" found in {}.'.format(regex, work_dir))
     else:
-        print('Files that match "{}" in {}:'.format(regex, work_dir))
+        print('# Files that match "{}" in {}:'.format(regex, work_dir))
         [print(f) for f in files]
+
+
+@task
+def show_my_files(rcpath, app_name=APPNAME):
+    """Shows the files within the rcpath, i.e., a string with one '/', in the
+    format <variable of folder path>/<variable of files_of_interest regex>.
+
+    Parameters
+    ----------
+    rcpath: str
+        A path with one '/', in the format <variable of folder path>/<variable of files_of_interest regex>.
+        For example: 'data_dir/anat' will look for the folder path in the data_dir variable and the regex in the
+        anat variable inside the files_of_interest section.
+
+    app_name: str
+        Name of the app to look for the correspondent rcfile. Default: APPNAME (global variable)
+    """
+    if '/' not in rcpath:
+        print("Expected an rcpath in the format <variable of folder path>/<variable of files_of_interest regex>.")
+        return -1
+
+    dir_name, foi_name = rcpath.split('/')
+
+    app_cfg = rcfile(app_name)
+    if dir_name not in app_cfg:
+        print("Option {} not found in {} section.".format(dir_name, app_name))
+        return -1
+
+    foi_cfg = rcfile(app_name, 'files_of_interest')
+    if foi_name not in foi_cfg:
+        print("Option {} not found in files_of_interest section of {}.".format(foi_name, app_name))
+        return -1
+
+    work_dir = op.expanduser(app_cfg[dir_name])
+
+    return show_files(foi_name, work_dir)
 
 
 @task
@@ -268,3 +318,9 @@ def clean():
     call('rm *.log')
     call('rm *.pyc')
     shutil.rmtree('__pycache__')
+
+
+@task
+def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR):
+    os.environ['SUBJECTS_DIR'] = input_dir
+    print('TBD')
