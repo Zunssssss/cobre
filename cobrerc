@@ -1,9 +1,22 @@
 
 [cobre:calm.local]
-root_dir =~/data/cobre
-cache_dir=${root_dir}/cache
-raw_dir=${root_dir}/raw
-data_dir =${root_dir}/data
+root_dir  = ~/data/cobre
+cache_dir = ${root_dir}/cache
+raw_dir   = ${root_dir}/raw
+preproc_dir = ${root_dir}/preprocess
+fsurf_dir   = ${root_dir}/freesurfer
+
+[cobre:gt3.i2basque.es]
+root_dir    = ~/cobre
+cache_dir   = ${root_dir}/cache
+raw_dir     = ${root_dir}/raw
+preproc_dir = ${root_dir}/preprocess
+fsurf_dir   = ${root_dir}/freesurfer
+
+[cobre]
+version = 0.1
 
 [files_of_interest]
 # file match patterns
+raw_anat=mprage.nii.gz
+raw_rest=rest.nii.gz
