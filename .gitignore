@@ -52,3 +52,15 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#Temporal files
+*~
+
+#PyCharm Project
+.idea/
+
+#reference code
+devdoc/
+
+#OSX shit
+.DS_Store
