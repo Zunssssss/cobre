@@ -64,6 +64,13 @@ DATA_DIR      = PREPROC_DIR
 FOI_CFG = rcfile(APPNAME, 'files_of_interest')
 
 
+def verbose_switch(verbose=False):
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.getLogger().setLevel(logging.INFO)
+
+
 @task
 def show_configuration(section=None):
     cfg = rcfile(APPNAME, section)
@@ -109,11 +116,13 @@ def call_and_logit(cmd, logfile='logfile.log'):
 
 
 @task
-def compress_niftis(work_dir=DATA_DIR):
+def compress_niftis(work_dir=DATA_DIR, verbose=False):
     """Compress nifti files within work_dir using fslchfiletype command."""
     if not which('fslchfiletype'):
         print('Cannot find fslchfiletype to compress NifTi files. Passing.')
         return -1
+
+    verbose_switch(verbose)
 
     niftis = recursive_find_match(work_dir, '.*nii$')
     niftis.sort()
@@ -124,7 +133,7 @@ def compress_niftis(work_dir=DATA_DIR):
 
 
 @task
-def rename_files_of_interest(work_dir=DATA_DIR):
+def rename_files_of_interest(work_dir=DATA_DIR, verbose=False):
     """Look through the work_dir looking to the patterns matches indicated in the
     files_of_interest section of the config file.
     For each match it creates a copy of the file in the same folder renamed to
@@ -132,6 +141,8 @@ def rename_files_of_interest(work_dir=DATA_DIR):
     This will keep the file extensions and adding '+' characters if there are
     more than one match.
     """
+    verbose_switch(verbose)
+
     def copy_file(src, dst):
         dirname = op.dirname   (src)
         ext     = get_extension(src)
@@ -175,7 +186,7 @@ def rename_files_of_interest(work_dir=DATA_DIR):
             continue
 
         use_copy_mhd_and_raw = has_mhd_with_raws(files)
-        print('Copying {} to {}.'.format(regex, foi))
+        log.debig('Copying {} to {}.'.format(regex, foi))
 
         for fn in files:
             ext = get_extension(fn)
@@ -195,10 +206,12 @@ def rename_files_of_interest(work_dir=DATA_DIR):
 
 
 @task
-def remove_files_of_interest(work_dir=DATA_DIR):
+def remove_files_of_interest(work_dir=DATA_DIR, verbose=False):
     """Look through the work_dir looking to the patterns matches indicated in the
     files_of_interest section of the config file and remove them.
     """
+    verbose_switch(verbose)
+
     for foi in FOI_CFG:
         files = recursive_find_match(work_dir, foi)
         files.sort()
@@ -213,10 +226,12 @@ def remove_files_of_interest(work_dir=DATA_DIR):
 
 
 @task
-def remove_files(pattern, work_dir=DATA_DIR,):
+def remove_files(pattern, work_dir=DATA_DIR, verbose=False):
     """Look through the work_dir looking to the patterns matches the pattern argument value
     and remove them.
     """
+    verbose_switch(verbose)
+
     import sys
     try:
         from distutils.util import strtobool
@@ -349,7 +364,10 @@ FSURF_DIR     = op.expanduser(CFG['fsurf_dir'])
 
 
 @task
-def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True):
+def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=False):
+    """Execute recon_all on all subjects from input_dir/raw_anat"""
+    verbose_switch(verbose)
+
     os.environ['SUBJECTS_DIR'] = out_dir
 
     regex      = get_file_of_interest_regex('raw_anat')
@@ -374,8 +392,10 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True):
 
 
 @task
-def run_cpac():
+def run_cpac(verbose=False):
     """Execute cpac_run.py using the configuration from the rcfile"""
+    verbose_switch(verbose)
+
     try:
         conf_dir      = op.realpath(op.join(op.dirname(__file__), CFG['cpac_conf']))
         subjects_list = op.realpath(op.join(conf_dir, CFG['cpac_subjects_list']))
@@ -388,4 +408,4 @@ def run_cpac():
     cmd = '{} {} {}'.format(cpac_path, pipeline_file, subjects_list)
     log.debug('Calling: {}'.format(cmd))
 
-    call(cmd)
+    call_and_logit(cmd, 'cpac.log')
