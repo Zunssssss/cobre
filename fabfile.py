@@ -56,9 +56,7 @@ APPNAME       = 'cobre'
 CFG           = rcfile(APPNAME)
 RAW_DIR       = op.expanduser(CFG['raw_dir'])
 PREPROC_DIR   = op.expanduser(CFG['preproc_dir'])
-FSURF_DIR     = op.expanduser(CFG['fsurf_dir'])
 CACHE_DIR     = op.expanduser(CFG['cache_dir'])
-SUBJ_ID_REGEX = CFG['subj_id_regex']
 
 DATA_DIR      = PREPROC_DIR
 
@@ -343,6 +341,12 @@ def clean():
     call('rm *.pyc')
     shutil.rmtree('__pycache__')
 
+# ----------------------------------------------------------------------------------------------------------------------
+# COBRE PROJECT SPECIFIC FUNCTIONS
+# ----------------------------------------------------------------------------------------------------------------------
+SUBJ_ID_REGEX = CFG['subj_id_regex']
+FSURF_DIR     = op.expanduser(CFG['fsurf_dir'])
+
 
 @task
 def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True):
@@ -367,3 +371,21 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True):
             call(cmd)
         else:
             call_and_logit(cmd, 'freesurfer_{}.log'.format(subj_id), wait=True)
+
+
+@task
+def run_cpac():
+    """Execute cpac_run.py using the configuration from the rcfile"""
+    try:
+        conf_dir      = op.realpath(op.join(op.dirname(__file__), CFG['cpac_conf']))
+        subjects_list = op.realpath(op.join(conf_dir, CFG['cpac_subjects_list']))
+        pipeline_file = op.realpath(op.join(conf_dir, CFG['cpac_pipeline_file']))
+    except KeyError as ke:
+        log.exception(ke)
+
+    cpac_path = which('cpac_run.py')
+
+    cmd = '{} {} {}'.format(cpac_path, pipeline_file, subjects_list)
+    log.debug('Calling: {}'.format(cmd))
+
+    call(cmd)

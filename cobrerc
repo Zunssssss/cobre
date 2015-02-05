@@ -1,10 +1,11 @@
 
 [cobre:calm.local]
-root_dir  = ~/data/cobre
-cache_dir = ${root_dir}/cache
-raw_dir   = ${root_dir}/raw
+root_dir    = ~/data/cobre
+cache_dir   = ${root_dir}/cache
+raw_dir     = ${root_dir}/raw
 preproc_dir = ${root_dir}/preprocess
 fsurf_dir   = ${root_dir}/freesurfer
+cpac_conf   = cpac_conf/calm
 
 [cobre:gt3.i2basque.es]
 root_dir    = ~/cobre
@@ -12,10 +13,13 @@ cache_dir   = ${root_dir}/cache
 raw_dir     = ${root_dir}/raw
 preproc_dir = ${root_dir}/preprocess
 fsurf_dir   = ${root_dir}/freesurfer
+cpac_conf   = cpac_conf/gt3
 
 [cobre]
-version = 0.1
-subj_id_regex = (?P<subj_id>[0-9]{7})
+version            = 0.2
+subj_id_regex      = (?P<subj_id>[0-9]{7})
+cpac_pipeline_file = pipeline_config_cobre_wroclaw.yml
+cpac_subjects_list = CPAC_subject_list_COBRE.yml
 
 [files_of_interest]
 # file match patterns
