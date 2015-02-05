@@ -394,7 +394,6 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=Fa
 @task
 def run_cpac(verbose=False):
     """Execute cpac_run.py using the configuration from the rcfile"""
-    verbose_switch(verbose)
 
     try:
         conf_dir      = op.realpath(op.join(op.dirname(__file__), CFG['cpac_conf']))
@@ -402,6 +401,8 @@ def run_cpac(verbose=False):
         pipeline_file = op.realpath(op.join(conf_dir, CFG['cpac_pipeline_file']))
     except KeyError as ke:
         log.exception(ke)
+
+    verbose_switch(verbose)
 
     cpac_path = which('cpac_run.py')
 
