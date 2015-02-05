@@ -19,6 +19,7 @@ pip install joblib
 from    __future__ import (absolute_import, division, print_function, unicode_literals)
 
 import  os
+import  re
 import  sys
 import  shutil
 import  logging
@@ -51,14 +52,15 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
 # read configurations
-APPNAME     = 'cobre'
-CFG         = rcfile(APPNAME)
-RAW_DIR     = op.expanduser(CFG['raw_dir'])
-PREPROC_DIR = op.expanduser(CFG['preproc_dir'])
-FSURF_DIR   = op.expanduser(CFG['fsurf_dir'])
-CACHE_DIR   = op.expanduser(CFG['cache_dir'])
+APPNAME       = 'cobre'
+CFG           = rcfile(APPNAME)
+RAW_DIR       = op.expanduser(CFG['raw_dir'])
+PREPROC_DIR   = op.expanduser(CFG['preproc_dir'])
+FSURF_DIR     = op.expanduser(CFG['fsurf_dir'])
+CACHE_DIR     = op.expanduser(CFG['cache_dir'])
+SUBJ_ID_REGEX = CFG['subj_id_regex']
 
-DATA_DIR    = PREPROC_DIR
+DATA_DIR      = PREPROC_DIR
 
 # read files_of_interest section
 FOI_CFG = rcfile(APPNAME, 'files_of_interest')
@@ -89,7 +91,7 @@ def show_sections():
     [print(s) for s in sections]
 
 
-def call_cmd_and_logit(cmd, logfile='logfile.log'):
+def call_and_logit(cmd, logfile='logfile.log'):
     """Call cmd line with shell=True and saves the output and error output in logfile"""
     p           = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate(b"input data that is passed to subprocess' stdin")
@@ -248,6 +250,31 @@ def remove_files(pattern, work_dir=DATA_DIR,):
             os.remove(fn)
 
 
+def find_files(regex, work_dir):
+    """Returns a list of the files regex value within the files_of_interest section.
+
+    Parameters
+    ----------
+    regex: str
+        Name of the variable in files_of_interest section.
+
+    work_dir: str
+        Path of the root folder from where to start the search.s
+    """
+    files = recursive_find_match(work_dir, regex)
+    files.sort()
+    return files
+
+
+def get_file_of_interest_regex(name):
+    """Return the regex of the name variable in the files_of_interest section of the app rc file."""
+    cfg = rcfile(APPNAME, 'files_of_interest')
+    if name not in cfg:
+        print("Option {} not found in files_of_interest section.".format(name))
+        return -1
+    return cfg[name]
+
+
 @task
 def show_files(name, work_dir=DATA_DIR):
     """Lists the files inside work_dir that match the regex value of the variable 'name' within the
@@ -261,15 +288,11 @@ def show_files(name, work_dir=DATA_DIR):
     work_dir: str
         Path of the root folder from where to start the search.s
     """
-    cfg = rcfile(APPNAME, 'files_of_interest')
-    if name not in cfg:
-        print("Option {} not found in files_of_interest section.".format(name))
+    regex = get_file_of_interest_regex(name)
+    if not regex:
         return -1
 
-    regex = cfg[name]
-    files = recursive_find_match(work_dir, regex)
-    files.sort()
-
+    files = find_files(regex, work_dir)
     if not files:
         print('No files that match "{}" found in {}.'.format(regex, work_dir))
     else:
@@ -322,6 +345,24 @@ def clean():
 
 
 @task
-def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR):
-    os.environ['SUBJECTS_DIR'] = input_dir
-    print('TBD')
+def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True):
+    os.environ['SUBJECTS_DIR'] = out_dir
+
+    regex      = get_file_of_interest_regex('raw_anat')
+    subj_anats = find_files(regex, input_dir)
+    subj_reg   = re.compile(SUBJ_ID_REGEX)
+
+    for subj_anat_path in subj_anats:
+
+        subj_id = subj_reg.search(subj_anat_path).group()
+
+        #recon-all -all -i raw/0040000/session_1/anat_1/mprage.nii.gz -s 0040000
+        cmd = 'recon-all -all -i {} -s {}'.format(subj_anat_path, subj_id)
+
+        log.debug('Calling {}'.format(cmd))
+
+        if use_cluster:
+            cmd = 'fsl_sub ' + cmd
+            call(cmd)
+        else:
+            call_and_logit(cmd, 'freesurfer_{}.log'.format(subj_id), wait=True)

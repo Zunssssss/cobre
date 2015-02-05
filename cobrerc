@@ -15,6 +15,7 @@ fsurf_dir   = ${root_dir}/freesurfer
 
 [cobre]
 version = 0.1
+subj_id_regex = (?P<subj_id>[0-9]{7})
 
 [files_of_interest]
 # file match patterns
