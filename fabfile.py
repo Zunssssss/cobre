@@ -410,4 +410,6 @@ def run_cpac(verbose=False):
     log.debug('Calling: {}'.format(cmd))
     log.info ('Logging to cpac.log')
 
+    #print('import CPAC')
+    #print('CPAC.pipeline.cpac_runner.run("{}", "{}")'.format(pipeline_file, subjects_list))
     call_and_logit(cmd, 'cpac.log')
