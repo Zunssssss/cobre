@@ -352,13 +352,14 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True):
     subj_anats = find_files(regex, input_dir)
     subj_reg   = re.compile(SUBJ_ID_REGEX)
 
+    recon_all  = which('recon-all')
+
     for subj_anat_path in subj_anats:
 
         subj_id = subj_reg.search(subj_anat_path).group()
 
         #recon-all -all -i raw/0040000/session_1/anat_1/mprage.nii.gz -s 0040000
-        cmd = 'recon-all -all -i {} -s {}'.format(subj_anat_path, subj_id)
-
+        cmd = '{} -all -i {} -s {} -sd {}'.format(recon_all, subj_anat_path, subj_id, out_dir)
         log.debug('Calling {}'.format(cmd))
 
         if use_cluster:
