@@ -408,5 +408,6 @@ def run_cpac(verbose=False):
 
     cmd = '{} {} {}'.format(cpac_path, pipeline_file, subjects_list)
     log.debug('Calling: {}'.format(cmd))
+    log.info ('Logging to cpac.log')
 
     call_and_logit(cmd, 'cpac.log')

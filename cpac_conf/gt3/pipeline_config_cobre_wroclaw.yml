@@ -2,12 +2,14 @@
 # If set to True, CPAC will attempt to submit jobs through the job scheduler / resource manager selected below.
 runOnGrid :  True
 
+ROOT_DIR: /home/asavio/cobre
+
 
 # Full path to the FSL version to be used by CPAC.
 # If you have specified an FSL path in your .bashrc file, this path will be set automatically.
 FSLDIR :  /opt/APPS/FSL/fsl-5.0.5/fsl
 
-CPAC_RESOURCES_DIR: /home/asavio/cobre/docs/cpac_image_resources
+CPAC_RESOURCES_DIR: ${ROOT_DIR}/docs/cpac_image_resources
 
 
 # Sun Grid Engine (SGE) or Portable Batch System (PBS).
@@ -45,15 +47,15 @@ pipelineName :  cobre_wroclaw
 
 
 # Directory where CPAC should store temporary and intermediate files.
-workingDirectory :  /home/asavio/cobre/preprocess/work_dir
+workingDirectory :  ${ROOT_DIR}/preprocess/work_dir
 
 
 # Directory where CPAC should write crash logs.
-crashLogDirectory :  /home/asavio/cobre/preprocess/log
+crashLogDirectory :  ${ROOT_DIR}/preprocess/log
 
 
 # Directory where CPAC should place processed data.
-outputDirectory :  /home/asavio/cobre/preprocess/out
+outputDirectory :  ${ROOT_DIR}/preprocess/out
 
 
 # Create a user-friendly, well organized version of the output directory.
@@ -398,7 +400,7 @@ runSurfaceRegistraion :  [1]
 
 # Directory where FreeSurfer outputs surface data.
 # This should be the same as SUBJECTS_DIR in .bashrc
-reconSubjectsDirectory :  ${ROOTDIR}/cobre/freesurfer
+reconSubjectsDirectory :  ${ROOT_DIR}/cobre/freesurfer
 
 
 # Extract timeseries data for surface vertices.CPAC currently doesn't
