@@ -1,0 +1,11 @@
+#! /bin/bash
+#$ -cwd
+#$ -S /bin/bash
+#$ -V
+#$ -t 1-148
+#$ -q all.q
+#$ -e /home/asavio/projects/cobre/cluster_temp_files/c-pac_2015_02_05_23_27_33.err
+#$ -o /home/asavio/projects/cobre/cluster_temp_files/c-pac_2015_02_05_23_27_33.out
+source ~/.bashrc
+source /home/asavio/.envs/pydue/bin/activate
+python -c "import CPAC; CPAC.pipeline.cpac_pipeline.run(\"/home/asavio/projects/cobre/cpac_conf/gt3/pipeline_config_cobre_wroclaw.yml\" , \"/home/asavio/projects/cobre/cpac_conf/gt3/CPAC_subject_list_COBRE.yml\", \"$SGE_TASK_ID\" , \"/home/asavio/projects/cobre/cluster_temp_files/strategies.obj\", \"None\" , \"None\", \"None\", \"cobre_wroclaw\") " 
