@@ -5,7 +5,10 @@ cache_dir   = ${root_dir}/cache
 raw_dir     = ${root_dir}/raw
 preproc_dir = ${root_dir}/preprocess
 fsurf_dir   = ${root_dir}/freesurfer
+std_dir     = ${root_dir}/standard
+atlas_dir   = ${root_dir}/atlas
 cpac_conf   = cpac_conf/calm
+
 
 [cobre:gt3.i2basque.es]
 root_dir    = ~/cobre
@@ -13,15 +16,59 @@ cache_dir   = ${root_dir}/cache
 raw_dir     = ${root_dir}/raw
 preproc_dir = ${root_dir}/preprocess
 fsurf_dir   = ${root_dir}/freesurfer
+std_dir     = ${root_dir}/standard
+atlas_dir   = ${root_dir}/atlas
 cpac_conf   = cpac_conf/gt3
 
+
 [cobre]
-version            = 0.2
-subj_id_regex      = (?P<subj_id>[0-9]{7})
-cpac_pipeline_file = pipeline_config_cobre_wroclaw.yml
-cpac_subjects_list = CPAC_subject_list_COBRE.yml
+version             = 0.2
+subj_id_regex       = (?P<subj_id>[0-9]{7})
+cpac_pipeline_file  = pipeline_config_cobre_wroclaw.yml
+cpac_subjects_list  = CPAC_subject_list_COBRE.yml
+docs_dir            = docs
+
+#diagnostic data
+subj_labels         = ${docs_dir}/subj_diagnosis_labels.csv
+subj_scores         = ${docs_dir}/subj_diagnosis_scores.csv
+
+#reference list file: phenotypic data
+phenotupic_phenof   = ${docs_dir}/COBRE_phenotypic_data.csv
+
+#standard template files
+whole_3mm          = MNI152_T1_3mm.nii.gz
+brain_3mm          = MNI152_T1_3mm_brain.nii.gz
+brain_mask_3mm     = MNI152_T1_3mm_brain_mask.nii.gz
+brain_mask_dil_3mm = MNI152_T1_3mm_brain_mask_dil.nii.gz
+
+
+[old_cobre]
+# old cobre preprocessing files
+
+# option1: with or without temporal (0.01Hz-0.1Hz) filtering
+with_temp_filtering = pipeline_HackettCity
+no_temp_filtering   = pipeline_LitchfieldCity
+
+# option2: with or without global signal regression
+with_glob_nuis_corr = _compcor_ncomponents_5_linear1.global1.motion1.compcor1.CSF_0.98_GM_0.7_WM_0.98
+no_glob_nuis_corr   = _compcor_ncomponents_5_linear1.motion1.compcor1.CSF_0.98_GM_0.7_WM_0.98
+
+# pipeline folders
+pipe_wtemp_wglob    = ${with_temp_filtering}/${with_glob_nuis_corr}
+pipe_wtemp_noglob   = ${with_temp_filtering}/${no_glob_nuis_corr}
+pipe_ntemp_wglob    = ${no_temp_filtering}/${with_glob_nuis_corr}
+pipe_ntemp_noglob   = ${no_temp_filtering}/${no_glob_nuis_corr}
+
+    pipef = pipe.replace('/', '.')
+    os.path.join(wd, 'features/cobre_alff_Z_to_standard_smooth_' + pipef + '.npy'),
+    os.path.join(wd, 'features/cobre_falff_Z_to_standard_smooth_' + pipef + '.npy'),
+    os.path.join(wd, 'features/cobre_reho_Z_to_standard_smooth_' + pipef + '.npy'),
+    os.path.join(wd, 'features/cobre_vmhc_z_score_' + pipef + '.npy'),
+    os.path.join(wd, 'features/cobre_vmhc_z_score_stat_map_' + pipef + '.npy')
+
+
 
 [files_of_interest]
 # file match patterns
-raw_anat=mprage.nii.gz
-raw_rest=rest.nii.gz
+raw_anat    = mprage.nii.gz
+raw_rest    = rest.nii.gz
