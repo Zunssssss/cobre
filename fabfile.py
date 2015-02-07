@@ -34,6 +34,7 @@ from    boyle.utils.rcfile      import rcfile
 from    boyle.utils.strings     import count_hits
 from    boyle.mhd               import copy_mhd_and_raw
 from    boyle.commands          import which
+from    boyle.nifti.read        import niftilist_mask_to_array
 
 try:
     from fabric.api import task, local
@@ -288,6 +289,10 @@ def get_file_of_interest_regex(name):
     return cfg[name]
 
 
+def print_list(alist):
+    [print(i) for i in alist]
+
+
 @task
 def show_files(name, work_dir=DATA_DIR):
     """Lists the files inside work_dir that match the regex value of the variable 'name' within the
@@ -310,7 +315,7 @@ def show_files(name, work_dir=DATA_DIR):
         print('No files that match "{}" found in {}.'.format(regex, work_dir))
     else:
         print('# Files that match "{}" in {}:'.format(regex, work_dir))
-        [print(f) for f in files]
+        print_list(files)
 
 
 @task
@@ -356,11 +361,16 @@ def clean():
     call('rm *.pyc')
     shutil.rmtree('__pycache__')
 
+
 # ----------------------------------------------------------------------------------------------------------------------
 # COBRE PROJECT SPECIFIC FUNCTIONS
 # ----------------------------------------------------------------------------------------------------------------------
+OLD_COBRE_DIR = CFG.get('old_cobre_dir', None)
+OLD_COBRE_CFG = rcfile(APPNAME, 'old_cobre')
+
 SUBJ_ID_REGEX = CFG['subj_id_regex']
 FSURF_DIR     = op.expanduser(CFG['fsurf_dir'])
+PREPROC_DIR   = OLD_COBRE_DIR
 
 
 @task
@@ -413,3 +423,157 @@ def run_cpac(verbose=False):
     #print('import CPAC')
     #print('CPAC.pipeline.cpac_runner.run("{}", "{}")'.format(pipeline_file, subjects_list))
     call_and_logit(cmd, 'cpac.log')
+
+
+def get_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varname='pipe_wtemp_wglob',
+                       file_name_varname='reho'):
+    """Return a list of the file_name_varname files in the corresponding pipeline
+
+    Parameters
+    ----------
+    root_dir: str
+        A real file path or a RCfile variable name which indicates where to start looking for files.
+        Note: be sure that if you want it a variable name, don't have a folder with the same name near this script.
+
+    section_name: str
+        RCfile section name to get the pipe_varname and also look for root_dir if needed.
+
+    pipe_varname: str
+        RCfile variable name for the pipeline pattern to match and filter the full paths of the found files.
+
+    file_name_varname: str
+        RCfile variable name for the file you are looking for.
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+
+    Returns
+    -------
+    fois
+        list of matched filepaths
+    """
+
+    try:
+        settings          = rcfile(APPNAME, section_name)
+        pipe_name         = settings[pipe_varname]
+        files_of_interest = rcfile(APPNAME, 'files_of_interest')
+        varname           = files_of_interest[file_name_varname]
+
+        if not op.exists(root_dir):
+            log.debug('Could not find path {} looking for variable in {}rc file with this name.'.format(root_dir,
+                                                                                                        APPNAME))
+            root_dir = settings.get(root_dir, CFG[root_dir])
+    except:
+        log.exception('Error looking for variable names in {} rc file.'.format(APPNAME))
+        exit(-1)
+
+    log.debug('Looking for {} files from pipe {} within {} folder'.format(varname, pipe_name, root_dir))
+    files = find_files(varname, root_dir)
+
+    log.debug('Found {} files that match the file name. Now filtering for pipe name.'.format(len(files)))
+
+    return [fpath for fpath in files if re.match(pipe_name, fpath)]
+
+
+@task
+def show_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varname='pipe_wtemp_wglob',
+                        file_name_varname='reho', verbose=False):
+    """Print a list of the file_name_varname files in the corresponding pipeline.
+
+    Parameters
+    ----------
+    root_dir: str
+        A real file path or a RCfile variable name which indicates where to start looking for files.
+        Note: be sure that if you want it a variable name, don't have a folder with the same name near this script.
+
+    section_name: str
+        RCfile section name to get the pipe_varname and also look for root_dir if needed.
+
+    pipe_varname: str
+        RCfile variable name for the pipeline pattern to match and filter the full paths of the found files.
+
+    file_name_varname: str
+        RCfile variable name for the file you are looking for.
+
+    verbose: bool
+        If verbose will show DEBUG log messages.
+    """
+    verbose_switch(verbose)
+
+    pipe_files = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname)
+
+    if not pipe_files:
+        log.info('Could not find {} files from pipe {} within {} folder'.format(file_name_varname, pipe_varname, root_dir))
+    else:
+        print_list(pipe_files)
+
+
+@task
+def pack_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varname='pipe_wtemp_wglob',
+                        file_name_varname='reho', mask_file_varname='brain_mask_dil_3mm', smooth_mm=0,
+                        output_file='cobre_reho_pack.mat', verbose=False):
+    """Mask and compress the data into a file.
+
+    Will save into the file: data, mask_indices, vol_shape
+
+        data: Numpy array with shape N x prod(vol.shape)
+              containing the N files as flat vectors.
+
+        mask_indices: matrix with indices of the voxels in the mask
+
+        vol_shape: Tuple with shape of the volumes, for reshaping.
+
+    Parameters
+    ----------
+    root_dir: str
+        A real file path or a RCfile variable name which indicates where to start looking for files.
+        Note: be sure that if you want it a variable name, don't have a folder with the same name near this script.
+
+    section_name: str
+        RCfile section name to get the pipe_varname and also look for root_dir if needed.
+
+    pipe_varname: str
+        RCfile variable name for the pipeline pattern to match and filter the full paths of the found files.
+
+    file_name_varname: str
+        RCfile variable name for the file you are looking for.
+
+    mask_file_varname: str
+        RCfile variable name for the mask file that you want to use to mask the data.
+
+    smooth_mm: int
+        FWHM size in mm of a Gaussian smoothing kernel to smooth the images before storage.
+
+    output_file: str
+        Path to the output file. The extension of the file will be taken into account for the file format.
+        Choices of extensions: '.pyshelf' or '.shelf' (Python shelve)
+                               '.mat' (Matlab archive),
+                               '.hdf5' or '.h5' (HDF5 file)
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+    """
+    verbose_switch(verbose)
+
+    pipe_files = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname)
+
+    if not pipe_files:
+        log.info('Could not find {} files from pipe {} within {} folder'.format(file_name_varname, pipe_varname, root_dir))
+        exit(-1)
+
+    pipe_files.sort()
+    mask_file = CFG[mask_file_varname]
+
+    from boyle.nifti.sets import NiftiSubjectsSet
+
+    log.debug('Parsing subjects into a Nifti file set.')
+    subj_set = NiftiSubjectsSet(pipe_files, mask_file, all_same_shape=True)
+
+    log.debug('Saving masked data into file {}.'.format(output_file))
+    subj_set.to_file(output_file, smooth_mm, outdtype=None)
+
+    #outmat, mask_indices, mask_shape = niftilist_mask_to_array(pipe_files, mask_file)
+    #save file
+    #of = os.path.join(wd, 'cobre_' + ftypename + '_' + pipe.replace('/','.'))
+    #print ('Saving ' + of + '.npy')
+    #np.save(of + '.npy', feats)

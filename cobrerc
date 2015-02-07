@@ -1,24 +1,25 @@
 
 [cobre:calm.local]
-root_dir    = ~/data/cobre
-cache_dir   = ${root_dir}/cache
-raw_dir     = ${root_dir}/raw
-preproc_dir = ${root_dir}/preprocess
-fsurf_dir   = ${root_dir}/freesurfer
-std_dir     = ${root_dir}/standard
-atlas_dir   = ${root_dir}/atlas
-cpac_conf   = cpac_conf/calm
+root_dir      = ~/data/cobre
+cache_dir     = ${root_dir}/cache
+raw_dir       = ${root_dir}/raw
+preproc_dir   = ${root_dir}/preprocess
+fsurf_dir     = ${root_dir}/freesurfer
+std_dir       = ${root_dir}/standard
+atlas_dir     = ${root_dir}/atlas
+cpac_conf     = cpac_conf/calm
+old_cobre_dir = /Volumes/chafs/data/cobre/cpac/out
 
 
 [cobre:gt3.i2basque.es]
-root_dir    = ~/cobre
-cache_dir   = ${root_dir}/cache
-raw_dir     = ${root_dir}/raw
-preproc_dir = ${root_dir}/preprocess
-fsurf_dir   = ${root_dir}/freesurfer
-std_dir     = ${root_dir}/standard
-atlas_dir   = ${root_dir}/atlas
-cpac_conf   = cpac_conf/gt3
+root_dir      = ~/cobre
+cache_dir     = ${root_dir}/cache
+raw_dir       = ${root_dir}/raw
+preproc_dir   = ${root_dir}/preprocess
+fsurf_dir     = ${root_dir}/freesurfer
+std_dir       = ${root_dir}/standard
+atlas_dir     = ${root_dir}/atlas
+cpac_conf     = cpac_conf/gt3
 
 
 [cobre]
@@ -53,22 +54,35 @@ no_temp_filtering   = pipeline_LitchfieldCity
 with_glob_nuis_corr = _compcor_ncomponents_5_linear1.global1.motion1.compcor1.CSF_0.98_GM_0.7_WM_0.98
 no_glob_nuis_corr   = _compcor_ncomponents_5_linear1.motion1.compcor1.CSF_0.98_GM_0.7_WM_0.98
 
-# pipeline folders
-pipe_wtemp_wglob    = ${with_temp_filtering}/${with_glob_nuis_corr}
-pipe_wtemp_noglob   = ${with_temp_filtering}/${no_glob_nuis_corr}
-pipe_ntemp_wglob    = ${no_temp_filtering}/${with_glob_nuis_corr}
-pipe_ntemp_noglob   = ${no_temp_filtering}/${no_glob_nuis_corr}
-
-    pipef = pipe.replace('/', '.')
-    os.path.join(wd, 'features/cobre_alff_Z_to_standard_smooth_' + pipef + '.npy'),
-    os.path.join(wd, 'features/cobre_falff_Z_to_standard_smooth_' + pipef + '.npy'),
-    os.path.join(wd, 'features/cobre_reho_Z_to_standard_smooth_' + pipef + '.npy'),
-    os.path.join(wd, 'features/cobre_vmhc_z_score_' + pipef + '.npy'),
-    os.path.join(wd, 'features/cobre_vmhc_z_score_stat_map_' + pipef + '.npy')
-
+# pipeline folders (absolute path exact match pattern)
+pipe_wtemp_wglob    = ^.*${with_temp_filtering}/${with_glob_nuis_corr}.*$$
+pipe_wtemp_noglob   = ^.*${with_temp_filtering}/${no_glob_nuis_corr}.*$$
+pipe_ntemp_wglob    = ^.*${no_temp_filtering}/${with_glob_nuis_corr}.*$$
+pipe_ntemp_noglob   = ^.*${no_temp_filtering}/${no_glob_nuis_corr}.*$$
 
 
 [files_of_interest]
 # file match patterns
-raw_anat    = mprage.nii.gz
-raw_rest    = rest.nii.gz
+
+# raw data
+raw_anat          = mprage.nii.gz
+raw_rest          = rest.nii.gz
+
+# C-PAC results
+reho              = reho_Z_to_standard_smooth.nii.gz
+vmhc              = vmhc_z_score.nii.gz
+vmhcs             = vmhc_z_score_stat_map.nii.gz
+
+alffx             = alff_Z_to_standard_smooth.nii.gz
+falffx            = falff_Z_to_standard_smooth.nii.gz
+
+funcfiltx         = functional_freq_filtered.nii.gz
+funcmnix          = functional_mni.nii.gz
+
+grey_matter       = segment_pve_1.nii.gz
+
+mnitoanat_linx    = anatomical_to_mni_linear_xfm.mat
+mnitoanat_nonlinx = anatomical_to_mni_nonlinear_xfm.nii.gz
+
+anattomni_linx    = mni_to_anatomical_linear_xfm.mat
+anattomni_nonlinx = mni_to_anatomical_nonlinear_xfm.nii.gz
