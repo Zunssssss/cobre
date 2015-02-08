@@ -415,13 +415,12 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=Fa
 
         #recon-all -all -i raw/0040000/session_1/anat_1/mprage.nii.gz -s 0040000
         cmd = '{} -all -i {} -s {} -sd {}'.format(recon_all, subj_anat_path, subj_id, out_dir)
-        log.debug('Calling {}'.format(cmd))
 
         if use_cluster:
             cmd = 'fsl_sub ' + cmd
-            call(cmd)
-        else:
-            call_and_logit(cmd, 'freesurfer_{}.log'.format(subj_id), wait=True)
+
+        log.debug('Calling {}'.format(cmd))
+        call_and_logit(cmd, 'freesurfer_{}.log'.format(subj_id), wait=True)
 
 
 @task
