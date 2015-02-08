@@ -43,7 +43,6 @@ except:
     from invoke     import task
     from invoke     import run as local
 
-
 # my own system call
 from functools import partial
 call = partial(subprocess.call, shell=True)
@@ -389,7 +388,7 @@ def clean():
 # ----------------------------------------------------------------------------------------------------------------------
 # COBRE PROJECT SPECIFIC FUNCTIONS
 # ----------------------------------------------------------------------------------------------------------------------
-OLD_COBRE_DIR = op.expanduser(CFG.get('old_cobre_dir', None))
+OLD_COBRE_DIR = op.expanduser(CFG.get('old_cobre_dir', ''))
 OLD_COBRE_CFG = rcfile(APPNAME, 'old_cobre')
 
 SUBJ_ID_REGEX = CFG['subj_id_regex']
