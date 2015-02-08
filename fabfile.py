@@ -420,7 +420,7 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=Fa
             cmd = 'fsl_sub ' + cmd
 
         log.debug('Calling {}'.format(cmd))
-        call_and_logit(cmd, 'freesurfer_{}.log'.format(subj_id), wait=True)
+        call_and_logit(cmd, 'freesurfer_{}.log'.format(subj_id))
 
 
 @task
