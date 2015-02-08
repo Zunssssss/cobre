@@ -11,6 +11,16 @@ cpac_conf     = cpac_conf/calm
 old_cobre_dir = /Volumes/chafs/data/cobre/cpac/out
 
 
+[cobre:buccaneer]
+root_dir      = /data/cobre
+cache_dir     = ${root_dir}/cache
+raw_dir       = ${root_dir}/raw
+preproc_dir   = ${root_dir}/preprocess
+fsurf_dir     = ${root_dir}/freesurfer
+std_dir       = ${root_dir}/standard
+atlas_dir     = ${root_dir}/atlas
+
+
 [cobre:gt3.i2basque.es]
 root_dir      = ~/cobre
 cache_dir     = ${root_dir}/cache
