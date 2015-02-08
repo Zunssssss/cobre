@@ -22,6 +22,22 @@ atlas_dir     = ${root_dir}/atlas
 cpac_conf     = cpac_conf/gt3
 
 
+[cobre:vagrant-ubuntu-trusty-64]
+root_dir      = ~/data/cobre
+cache_dir     = ${root_dir}/cache
+raw_dir       = ${root_dir}/raw
+preproc_dir   = ${root_dir}/preprocess
+fsurf_dir     = ${root_dir}/freesurfer
+std_dir       = ${root_dir}/standard
+atlas_dir     = ${root_dir}/atlas
+old_cobre_dir = /media/alexandre/chafs/data/cobre/cpac/out
+
+# a fix for the broken links
+# !/bin/bash
+# lst=`find . -type l`
+# for l in $lst; do trgt=`readlink "$l"`; ln -fs "/media/alexandre/chafs/data${trgt#/media/alexandre/cobre*}" "$l"; done
+
+
 [cobre]
 version             = 0.2
 subj_id_regex       = (?P<subj_id>[0-9]{7})
@@ -34,13 +50,13 @@ subj_labels         = ${docs_dir}/subj_diagnosis_labels.csv
 subj_scores         = ${docs_dir}/subj_diagnosis_scores.csv
 
 #reference list file: phenotypic data
-phenotupic_phenof   = ${docs_dir}/COBRE_phenotypic_data.csv
+phenotypic_phenof   = ${docs_dir}/COBRE_phenotypic_data.csv
 
 #standard template files
-whole_3mm          = MNI152_T1_3mm.nii.gz
-brain_3mm          = MNI152_T1_3mm_brain.nii.gz
-brain_mask_3mm     = MNI152_T1_3mm_brain_mask.nii.gz
-brain_mask_dil_3mm = MNI152_T1_3mm_brain_mask_dil.nii.gz
+whole_3mm           = MNI152_T1_3mm.nii.gz
+brain_3mm           = MNI152_T1_3mm_brain.nii.gz
+brain_mask_3mm      = MNI152_T1_3mm_brain_mask.nii.gz
+brain_mask_dil_3mm  = MNI152_T1_3mm_brain_mask_dil.nii.gz
 
 
 [old_cobre]
@@ -71,6 +87,7 @@ raw_rest          = rest.nii.gz
 # C-PAC results
 reho              = reho_Z_to_standard_smooth.nii.gz
 vmhc              = vmhc_z_score.nii.gz
+vmhc3mm           = vmhc_z_score_3mm.nii.gz
 vmhcs             = vmhc_z_score_stat_map.nii.gz
 
 alffx             = alff_Z_to_standard_smooth.nii.gz

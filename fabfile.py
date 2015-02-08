@@ -24,13 +24,14 @@ import  sys
 import  shutil
 import  logging
 import  os.path                 as     op
+import  numpy                   as     np
 from    glob                    import glob
 import  subprocess
 from    subprocess              import Popen, PIPE
 
 from    boyle.files.search      import recursive_find_match
 from    boyle.files.names       import get_extension, remove_ext
-from    boyle.utils.rcfile      import rcfile
+from    boyle.utils.rcfile      import rcfile, get_sections
 from    boyle.utils.strings     import count_hits
 from    boyle.mhd               import copy_mhd_and_raw
 from    boyle.commands          import which
@@ -120,7 +121,7 @@ def call_and_logit(cmd, logfile='logfile.log'):
 def compress_niftis(work_dir=DATA_DIR, verbose=False):
     """Compress nifti files within work_dir using fslchfiletype command."""
     if not which('fslchfiletype'):
-        print('Cannot find fslchfiletype to compress NifTi files. Passing.')
+        log.error('Cannot find fslchfiletype to compress NifTi files. Passing.')
         return -1
 
     verbose_switch(verbose)
@@ -183,7 +184,7 @@ def rename_files_of_interest(work_dir=DATA_DIR, verbose=False):
         files.sort()
 
         if not files:
-            print('Could not find {} files that match {} within {}.'.format(foi, regex, work_dir))
+            log.error('Could not find {} files that match {} within {}.'.format(foi, regex, work_dir))
             continue
 
         use_copy_mhd_and_raw = has_mhd_with_raws(files)
@@ -207,23 +208,16 @@ def rename_files_of_interest(work_dir=DATA_DIR, verbose=False):
 
 
 @task
-def remove_files_of_interest(work_dir=DATA_DIR, verbose=False):
+def remove_files_of_interest(work_dir=DATA_DIR, verbose=True):
     """Look through the work_dir looking to the patterns matches indicated in the
     files_of_interest section of the config file and remove them.
     """
     verbose_switch(verbose)
 
     for foi in FOI_CFG:
-        files = recursive_find_match(work_dir, foi)
-        files.sort()
-
-        if not files:
-            print('Could not find {0} files that match "{0}" within {1}.'.format(foi, work_dir))
-            continue
-
-        for fn in files:
-            log.debug('Removing {}.'.format(fn))
-            os.remove(fn)
+        regex = get_file_of_interest_regex(foi)
+        log.info('Removing {} files that match {}.'.format(len(files), regex))
+        remove_files(regex, work_dir, verbose)
 
 
 @task
@@ -250,31 +244,35 @@ def remove_files(pattern, work_dir=DATA_DIR, verbose=False):
             return prompt(query)
         return ret
 
-    files = recursive_find_match(work_dir, pattern)
-    files.sort()
+    files = find_files(work_dir, pattern)
 
     if not files:
-        print('Could not find files that match "{0}" within {1}.'.format(pattern, work_dir))
+        log.info('Could not find files that match r"{0}" within {1}.'.format(pattern, work_dir))
         return
 
-    print('\n'.join(files))
+    log.info('\n'.join(files))
     if prompt('Found these files. Want to remove?'):
         for fn in files:
             log.debug('Removing {}.'.format(fn))
             os.remove(fn)
 
 
-def find_files(regex, work_dir):
+def find_files(work_dir, regex):
     """Returns a list of the files regex value within the files_of_interest section.
 
     Parameters
     ----------
-    regex: str
-        Name of the variable in files_of_interest section.
-
     work_dir: str
         Path of the root folder from where to start the search.s
+
+    regex: str
+        Name of the variable in files_of_interest section.
     """
+    if not op.exists(work_dir):
+        msg = 'Could not find {} folder.'.format(work_dir)
+        log.error(msg)
+        return []
+
     files = recursive_find_match(work_dir, regex)
     files.sort()
     return files
@@ -284,13 +282,39 @@ def get_file_of_interest_regex(name):
     """Return the regex of the name variable in the files_of_interest section of the app rc file."""
     cfg = rcfile(APPNAME, 'files_of_interest')
     if name not in cfg:
-        print("Option {} not found in files_of_interest section.".format(name))
-        return -1
+        msg = "Option {} not found in files_of_interest section.".format(name)
+        log.error(msg)
+        raise KeyError(msg)
     return cfg[name]
 
 
 def print_list(alist):
     [print(i) for i in alist]
+
+
+@task
+def show_regex_match(regex, work_dir=DATA_DIR):
+    """Lists the files inside work_dir that match the name of the given regex.
+
+    Parameters
+    ----------
+    regex: str
+        Regular expession
+
+    work_dir: str
+        Path of the root folder from where to start the search.
+        Or, if the given name is not an existing path, name of the rcfile variable that contains the folder path.
+    """
+    if not op.exists(work_dir):
+        work_dir = op.expanduser(CFG[work_dir])
+
+    files = find_files(work_dir, regex)
+
+    if not files:
+        log.info('No files that match "{}" found in {}.'.format(regex, work_dir))
+    else:
+        log.info('# Files that match "{}" in {}:'.format(regex, work_dir))
+        print_list(files)
 
 
 @task
@@ -310,11 +334,11 @@ def show_files(name, work_dir=DATA_DIR):
     if not regex:
         return -1
 
-    files = find_files(regex, work_dir)
+    files = find_files(work_dir, regex)
     if not files:
-        print('No files that match "{}" found in {}.'.format(regex, work_dir))
+        log.error('No files that match "{}" found in {}.'.format(regex, work_dir))
     else:
-        print('# Files that match "{}" in {}:'.format(regex, work_dir))
+        log.debug('# Files that match "{}" in {}:'.format(regex, work_dir))
         print_list(files)
 
 
@@ -334,19 +358,19 @@ def show_my_files(rcpath, app_name=APPNAME):
         Name of the app to look for the correspondent rcfile. Default: APPNAME (global variable)
     """
     if '/' not in rcpath:
-        print("Expected an rcpath in the format <variable of folder path>/<variable of files_of_interest regex>.")
+        log.error("Expected an rcpath in the format <variable of folder path>/<variable of files_of_interest regex>.")
         return -1
 
     dir_name, foi_name = rcpath.split('/')
 
     app_cfg = rcfile(app_name)
     if dir_name not in app_cfg:
-        print("Option {} not found in {} section.".format(dir_name, app_name))
+        log.error("Option {} not found in {} section.".format(dir_name, app_name))
         return -1
 
     foi_cfg = rcfile(app_name, 'files_of_interest')
     if foi_name not in foi_cfg:
-        print("Option {} not found in files_of_interest section of {}.".format(foi_name, app_name))
+        log.error("Option {} not found in files_of_interest section of {}.".format(foi_name, app_name))
         return -1
 
     work_dir = op.expanduser(app_cfg[dir_name])
@@ -365,7 +389,7 @@ def clean():
 # ----------------------------------------------------------------------------------------------------------------------
 # COBRE PROJECT SPECIFIC FUNCTIONS
 # ----------------------------------------------------------------------------------------------------------------------
-OLD_COBRE_DIR = CFG.get('old_cobre_dir', None)
+OLD_COBRE_DIR = op.expanduser(CFG.get('old_cobre_dir', None))
 OLD_COBRE_CFG = rcfile(APPNAME, 'old_cobre')
 
 SUBJ_ID_REGEX = CFG['subj_id_regex']
@@ -381,7 +405,7 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=Fa
     os.environ['SUBJECTS_DIR'] = out_dir
 
     regex      = get_file_of_interest_regex('raw_anat')
-    subj_anats = find_files(regex, input_dir)
+    subj_anats = find_files(input_dir, regex)
     subj_reg   = re.compile(SUBJ_ID_REGEX)
 
     recon_all  = which('recon-all')
@@ -462,13 +486,13 @@ def get_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varn
         if not op.exists(root_dir):
             log.debug('Could not find path {} looking for variable in {}rc file with this name.'.format(root_dir,
                                                                                                         APPNAME))
-            root_dir = settings.get(root_dir, CFG[root_dir])
+            root_dir = op.expanduser(settings.get(root_dir, CFG[root_dir]))
     except:
         log.exception('Error looking for variable names in {} rc file.'.format(APPNAME))
         exit(-1)
 
     log.debug('Looking for {} files from pipe {} within {} folder'.format(varname, pipe_name, root_dir))
-    files = find_files(varname, root_dir)
+    files = find_files(root_dir, varname)
 
     log.debug('Found {} files that match the file name. Now filtering for pipe name.'.format(len(files)))
 
@@ -553,24 +577,35 @@ def pack_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_var
     verbose: bool
         If verbose will show DEBUG log info.
     """
-    verbose_switch(verbose)
-
-    pipe_files = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname)
-
-    if not pipe_files:
-        log.info('Could not find {} files from pipe {} within {} folder'.format(file_name_varname, pipe_varname, root_dir))
-        exit(-1)
-
-    pipe_files.sort()
-    mask_file = CFG[mask_file_varname]
-
     from boyle.nifti.sets import NiftiSubjectsSet
 
-    log.debug('Parsing subjects into a Nifti file set.')
-    subj_set = NiftiSubjectsSet(pipe_files, mask_file, all_same_shape=True)
+    verbose_switch(verbose)
 
-    log.debug('Saving masked data into file {}.'.format(output_file))
-    subj_set.to_file(output_file, smooth_mm, outdtype=None)
+    mask_file = None
+    if mask_file_varname:
+        mask_file = op.join(op.expanduser(CFG['std_dir']),  CFG[mask_file_varname])
+
+    labels_file = op.realpath(op.join(CFG['subj_labels']))
+    labels      = np.loadtxt(labels_file, dtype=int, delimiter='\n')
+
+    pipe_files = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname)
+    pipe_files.sort()
+
+    if not pipe_files:
+        log.info('Could not find {} files from pipe {} within {} folder'.format(file_name_varname,
+                                                                                pipe_varname,
+                                                                                root_dir))
+        exit(-1)
+
+    log.debug('Parsing {} subjects into a Nifti file set.'.format(len(pipe_files)))
+    try:
+        subj_set = NiftiSubjectsSet(pipe_files, mask_file, all_same_shape=True)
+        subj_set.set_labels(labels)
+    except:
+        log.exception('Error creating the set of subjects.')
+    else:
+        log.debug('Saving masked data into file {}.'.format(output_file))
+        subj_set.to_file(output_file, smooth_mm, outdtype=None)
 
     #outmat, mask_indices, mask_shape = niftilist_mask_to_array(pipe_files, mask_file)
     #save file
