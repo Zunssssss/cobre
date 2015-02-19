@@ -5,7 +5,7 @@ This file is a series of tasks to preprocess COBRE dataset
 
 Installation
 ------------
-It runs on Python > 3.3 and uses invoke (or Fabric when a Python3 version is released) to execute
+It runs on Python > 3.3 or Python2.7 and uses invoke (or Fabric when a Python3 version is released) to execute
 the tasks from the command line.
 
 - requirements
@@ -14,34 +14,33 @@ pip install git@github.com:Neurita/boyle.git
 
 - optional requirement (for caching results):
 pip install joblib
+
 """
 
-from    __future__ import (absolute_import, division, print_function, unicode_literals)
+from   __future__ import (absolute_import, division, print_function, unicode_literals)
 
-import  os
-import  re
-import  sys
-import  shutil
-import  logging
-import  os.path                 as     op
-import  numpy                   as     np
-from    glob                    import glob
-import  subprocess
-from    subprocess              import Popen, PIPE
+import os
+import re
+import shutil
+import logging
+import os.path                 as     op
+import numpy                   as     np
+import subprocess
+from   subprocess              import Popen, PIPE
 
-from    boyle.files.search      import recursive_find_match
-from    boyle.files.names       import get_extension, remove_ext
-from    boyle.utils.rcfile      import rcfile, get_sections
-from    boyle.utils.strings     import count_hits
-from    boyle.mhd               import copy_mhd_and_raw
-from    boyle.commands          import which
-from    boyle.nifti.read        import niftilist_mask_to_array
+from   boyle.utils.text_files  import read
+from   boyle.files.search      import recursive_find_match
+from   boyle.files.names       import get_extension, remove_ext
+from   boyle.utils.rcfile      import rcfile, get_sections, get_sys_path
+from   boyle.utils.strings     import count_hits
+from   boyle.mhd               import copy_mhd_and_raw
+from   boyle.commands          import which
 
 try:
-    from fabric.api import task, local
-except:
     from invoke     import task
     from invoke     import run as local
+except:
+    from fabric.api import task, local
 
 # my own system call
 from functools import partial
@@ -67,9 +66,11 @@ FOI_CFG = rcfile(APPNAME, 'files_of_interest')
 
 def verbose_switch(verbose=False):
     if verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
+        log_level = logging.DEBUG
     else:
-        logging.getLogger().setLevel(logging.INFO)
+        log_level = logging.INFO
+
+    logging.getLogger().setLevel(log_level)
 
 
 @task
@@ -89,6 +90,79 @@ def show_configuration(section=None):
             cfg = rcfile(APPNAME, s)
             for i in cfg:
                 print("{} : {}".format(i, cfg[i]))
+
+
+def get_subject_labels(app_name=APPNAME, subj_labels_file_varname='subj_labels'):
+    file_path = op.realpath(op.expanduser(CFG.get(subj_labels_file_varname, None)))
+    if file_path is None:
+        raise KeyError('Could not find variable {} in {} rcfile.'.format(subj_labels_file_varname, app_name))
+
+    return np.loadtxt(file_path, dtype=int, delimiter='\n')
+
+
+def get_subject_ids(app_name=APPNAME, subj_id_list_varname='subj_id_list_file'):
+    file_path = op.realpath(op.expanduser(CFG.get(subj_id_list_varname, None)))
+    if file_path is None:
+        raise KeyError('Could not find variable {} in {} rcfile.'.format(subj_id_list_varname, app_name))
+
+    log.debug('Reading list of subject ids from file {}.'.format(file_path))
+    return read(file_path).split()
+
+
+@task
+def get_filtered_subjects_ids_and_labels(app_name=APPNAME, subj_id_list_varname='subj_id_list_file',
+                                         subj_id_regex_varname='subj_id_regex'):
+    """Will use the value of subj_id_regex variable to filter out the subject ids that do not match on the
+    subj_id_list_file of the rcfile. Will also return filtered labels.
+
+    The recommendation is to add a '#' character in front of the IDs that you want excluded from the experiment.
+
+    Returns
+    -------
+    filt_ids: list of str
+        The subject ids that match the subject_id regex variable from the rcfile.
+    """
+    subj_ids = get_subject_ids(app_name, subj_id_list_varname)
+
+    subj_id_regex = CFG[subj_id_regex_varname]
+    subj_reg      = re.compile(subj_id_regex)
+    labels        = get_subject_labels()
+
+    log.debug('Filtering list of files using subjects ids from subject ids file.')
+    filt_ids  = []
+    filt_labs = []
+    for idx, sid in enumerate(subj_ids):
+        if subj_reg.match(sid) is not None:
+            filt_ids.append(sid)
+            filt_labs.append(labels[idx])
+
+    return filt_ids, filt_labs
+
+
+def get_subject_ids_and_labels(filter_by_subject_ids=False):
+    if filter_by_subject_ids:
+        subj_ids, labels = get_filtered_subjects_ids_and_labels()
+    else:
+        subj_ids = get_subject_ids()
+        labels   = get_subject_labels()
+
+    return subj_ids, labels
+
+
+def filter_list_by_subject_ids(files, subject_ids):
+    if files is None or not files:
+        return files
+
+    if subject_ids is None or not subject_ids:
+        return files
+
+    log.debug('Filtering list of files using subjects ids.')
+    filt_files = []
+    for fn in files:
+        if any(re.search(sid, fn) for sid in subject_ids):
+            filt_files.append(fn)
+
+    return filt_files
 
 
 @task
@@ -195,15 +269,17 @@ def rename_files_of_interest(work_dir=DATA_DIR, verbose=False):
                 if ext == '.raw':
                     continue
 
+            new_fn  = op.join(op.dirname(fn), foi) + ext
             try:
-                new_fn  = op.join(op.dirname(fn), foi) + ext
                 new_dst = copy_file(fn, new_fn)
             except:
-                log.exception()
-                exit(-1)
+                msg = 'Error copying file {} to {}.'.format(fn, new_fn)
+                log.exception(msg)
+                raise IOError(msg)
 
             if not op.exists(new_dst):
-                msg = 'Error copying file'
+                msg = 'Error copying file {} to {}. After trying to copy, the file does not exist.'.format(fn, new_dst)
+                log.error(msg)
 
 
 @task
@@ -215,7 +291,7 @@ def remove_files_of_interest(work_dir=DATA_DIR, verbose=True):
 
     for foi in FOI_CFG:
         regex = get_file_of_interest_regex(foi)
-        log.info('Removing {} files that match {}.'.format(len(files), regex))
+        log.info('Removing within {} that match {}.'.format(len(work_dir), regex))
         remove_files(regex, work_dir, verbose)
 
 
@@ -292,7 +368,7 @@ def print_list(alist):
 
 
 @task
-def show_regex_match(regex, work_dir=DATA_DIR):
+def show_regex_match(regex, work_dir=DATA_DIR, filter_by_subject_ids=False):
     """Lists the files inside work_dir that match the name of the given regex.
 
     Parameters
@@ -303,11 +379,19 @@ def show_regex_match(regex, work_dir=DATA_DIR):
     work_dir: str
         Path of the root folder from where to start the search.
         Or, if the given name is not an existing path, name of the rcfile variable that contains the folder path.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
     """
     if not op.exists(work_dir):
         work_dir = op.expanduser(CFG[work_dir])
 
     files = find_files(work_dir, regex)
+
+    subj_ids, labels = get_subject_ids_and_labels(filter_by_subject_ids)
+    if filter_by_subject_ids:
+        files = filter_list_by_subject_ids(files, subj_ids)
 
     if not files:
         log.info('No files that match "{}" found in {}.'.format(regex, work_dir))
@@ -317,8 +401,8 @@ def show_regex_match(regex, work_dir=DATA_DIR):
 
 
 @task
-def show_files(name, work_dir=DATA_DIR):
-    """Lists the files inside work_dir that match the regex value of the variable 'name' within the
+def show_files(name, work_dir=DATA_DIR, filter_by_subject_ids=False):
+    """Show a list of the files inside work_dir that match the regex value of the variable 'name' within the
     files_of_interest section.
 
     Parameters
@@ -327,22 +411,34 @@ def show_files(name, work_dir=DATA_DIR):
         Name of the variable in files_of_interest section.
 
     work_dir: str
-        Path of the root folder from where to start the search.s
-    """
-    regex = get_file_of_interest_regex(name)
-    if not regex:
-        return -1
+        Path of the root folder from where to start the search.
 
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+    """
+    try:
+        regex = get_file_of_interest_regex(name)
+    except:
+        raise
+
+    log.debug('Looking for files that match {} within {}.'.format(regex, work_dir))
     files = find_files(work_dir, regex)
+
+    subj_ids, labels = get_subject_ids_and_labels(filter_by_subject_ids)
+    if filter_by_subject_ids:
+        files = filter_list_by_subject_ids(files, subj_ids)
+
     if not files:
         log.error('No files that match "{}" found in {}.'.format(regex, work_dir))
     else:
         log.debug('# Files that match "{}" in {}:'.format(regex, work_dir))
         print_list(files)
+        return files
 
 
 @task
-def show_my_files(rcpath, app_name=APPNAME):
+def show_my_files(rcpath, app_name=APPNAME, filter_by_subject_ids=False):
     """Shows the files within the rcpath, i.e., a string with one '/', in the
     format <variable of folder path>/<variable of files_of_interest regex>.
 
@@ -355,6 +451,10 @@ def show_my_files(rcpath, app_name=APPNAME):
 
     app_name: str
         Name of the app to look for the correspondent rcfile. Default: APPNAME (global variable)
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
     """
     if '/' not in rcpath:
         log.error("Expected an rcpath in the format <variable of folder path>/<variable of files_of_interest regex>.")
@@ -367,14 +467,9 @@ def show_my_files(rcpath, app_name=APPNAME):
         log.error("Option {} not found in {} section.".format(dir_name, app_name))
         return -1
 
-    foi_cfg = rcfile(app_name, 'files_of_interest')
-    if foi_name not in foi_cfg:
-        log.error("Option {} not found in files_of_interest section of {}.".format(foi_name, app_name))
-        return -1
-
     work_dir = op.expanduser(app_cfg[dir_name])
 
-    return show_files(foi_name, work_dir)
+    return show_files(foi_name, work_dir, filter_by_subject_ids=filter_by_subject_ids)
 
 
 @task
@@ -397,8 +492,28 @@ PREPROC_DIR   = OLD_COBRE_DIR
 
 
 @task
-def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=False):
-    """Execute recon_all on all subjects from input_dir/raw_anat"""
+def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=False, filter_by_subject_ids=False):
+    """Execute recon_all on all subjects from input_dir/raw_anat
+
+    Parameters
+    ----------
+    input_dir: str
+        Path to where the subjects are
+
+    out_dir: str
+        Path to output folder where freesurfer will leave results.
+
+    use_cluster: bool
+        If True will use fsl_sub to submit the jobs to your set up cluster queue. This is True by default.
+        Use the flag -c to set it to False.
+
+    verbose: bool
+        If True will show debug logs.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+    """
     verbose_switch(verbose)
 
     os.environ['SUBJECTS_DIR'] = out_dir
@@ -406,6 +521,10 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=Fa
     regex      = get_file_of_interest_regex('raw_anat')
     subj_anats = find_files(input_dir, regex)
     subj_reg   = re.compile(SUBJ_ID_REGEX)
+
+    subj_ids, labels = get_subject_ids_and_labels(filter_by_subject_ids)
+    if filter_by_subject_ids:
+        subj_anats = filter_list_by_subject_ids(subj_anats, subj_ids)
 
     recon_all  = which('recon-all')
 
@@ -433,6 +552,7 @@ def run_cpac(verbose=False):
         pipeline_file = op.realpath(op.join(conf_dir, CFG['cpac_pipeline_file']))
     except KeyError as ke:
         log.exception(ke)
+        raise
 
     verbose_switch(verbose)
 
@@ -442,13 +562,13 @@ def run_cpac(verbose=False):
     log.debug('Calling: {}'.format(cmd))
     log.info ('Logging to cpac.log')
 
-    #print('import CPAC')
-    #print('CPAC.pipeline.cpac_runner.run("{}", "{}")'.format(pipeline_file, subjects_list))
+    # print('import CPAC')
+    # print('CPAC.pipeline.cpac_runner.run("{}", "{}")'.format(pipeline_file, subjects_list))
     call_and_logit(cmd, 'cpac.log')
 
 
 def get_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varname='pipe_wtemp_wglob',
-                       file_name_varname='reho'):
+                       file_name_varname='reho', filter_by_subject_ids=False, app_name=APPNAME):
     """Return a list of the file_name_varname files in the corresponding pipeline
 
     Parameters
@@ -469,6 +589,10 @@ def get_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varn
     verbose: bool
         If verbose will show DEBUG log info.
 
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+
     Returns
     -------
     fois
@@ -476,21 +600,24 @@ def get_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varn
     """
 
     try:
-        settings          = rcfile(APPNAME, section_name)
+        settings          = rcfile(app_name, section_name)
         pipe_name         = settings[pipe_varname]
-        files_of_interest = rcfile(APPNAME, 'files_of_interest')
+        files_of_interest = rcfile(app_name, 'files_of_interest')
         varname           = files_of_interest[file_name_varname]
-
-        if not op.exists(root_dir):
-            log.debug('Could not find path {} looking for variable in {}rc file with this name.'.format(root_dir,
-                                                                                                        APPNAME))
-            root_dir = op.expanduser(settings.get(root_dir, CFG[root_dir]))
+        root_dir          = get_sys_path(root_dir, section_name, app_name)
+    except IOError:
+        raise
     except:
-        log.exception('Error looking for variable names in {} rc file.'.format(APPNAME))
-        exit(-1)
+        msg = 'Error looking for variable names in {} rc file.'.format(APPNAME)
+        log.exception (msg)
+        raise KeyError(msg)
 
     log.debug('Looking for {} files from pipe {} within {} folder'.format(varname, pipe_name, root_dir))
     files = find_files(root_dir, varname)
+
+    subj_ids, labels = get_subject_ids_and_labels(filter_by_subject_ids)
+    if filter_by_subject_ids:
+        files = filter_list_by_subject_ids(files, subj_ids)
 
     log.debug('Found {} files that match the file name. Now filtering for pipe name.'.format(len(files)))
 
@@ -499,7 +626,7 @@ def get_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varn
 
 @task
 def show_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varname='pipe_wtemp_wglob',
-                        file_name_varname='reho', verbose=False):
+                        file_name_varname='reho', verbose=False, filter_by_subject_ids=True):
     """Print a list of the file_name_varname files in the corresponding pipeline.
 
     Parameters
@@ -519,10 +646,15 @@ def show_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_var
 
     verbose: bool
         If verbose will show DEBUG log messages.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
     """
     verbose_switch(verbose)
 
-    pipe_files = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname)
+    pipe_files = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname,
+                                    filter_by_subject_ids=filter_by_subject_ids)
 
     if not pipe_files:
         log.info('Could not find {} files from pipe {} within {} folder'.format(file_name_varname, pipe_varname, root_dir))
@@ -532,8 +664,8 @@ def show_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_var
 
 @task
 def pack_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varname='pipe_wtemp_wglob',
-                        file_name_varname='reho', mask_file_varname='brain_mask_dil_3mm', smooth_mm=0,
-                        output_file='cobre_reho_pack.mat', verbose=False):
+                        file_name_varname='reho', mask_file_varname='brain_mask_dil_3mm', smooth_fwhm=0,
+                        output_file='cobre_reho_pack.mat', verbose=False, filter_by_subject_ids=True):
     """Mask and compress the data into a file.
 
     Will save into the file: data, mask_indices, vol_shape
@@ -563,7 +695,79 @@ def pack_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_var
     mask_file_varname: str
         RCfile variable name for the mask file that you want to use to mask the data.
 
-    smooth_mm: int
+    smooth_fwhm: int
+        FWHM size in mm of a Gaussian smoothing kernel to smooth the images before storage.
+
+    output_file: str
+        Path to the output file. The extension of the file will be taken into account for the file format.
+        Choices of extensions: '.pyshelf' or '.shelf' (Python shelve)
+                               '.mat' (Matlab archive),
+                               '.hdf5' or '.h5' (HDF5 file)
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+    """
+    verbose_switch(verbose)
+
+    mask_file = None
+    if mask_file_varname:
+        mask_file = op.join(op.expanduser(CFG['std_dir']),  CFG[mask_file_varname])
+
+    subj_ids, labels = get_subject_ids_and_labels(filter_by_subject_ids)
+
+    pipe_files       = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname,
+                                          filter_by_subject_ids=filter_by_subject_ids)
+    pipe_files.sort()
+
+    if not pipe_files:
+        log.info('Could not find {} files from pipe {} '
+                 'within {} folder'.format(file_name_varname, pipe_varname, root_dir))
+        exit(-1)
+
+    log.debug('Parsing {} subjects into a Nifti file set.'.format(len(pipe_files)))
+    try:
+        _pack_files_to(pipe_files, mask_file=mask_file, labels=labels, subj_ids=subj_ids, smooth_fwhm=smooth_fwhm,
+                       output_file=output_file, verbose=verbose)
+    except:
+        log.exception('Error creating the set of subjects from {} files '
+                      'from pipe {} within {} folder'.format(file_name_varname, pipe_varname, root_dir))
+        raise
+
+
+def _pack_files_to(images, output_file, mask_file=None, labels=None, subj_ids=None, smooth_fwhm=0, verbose=False):
+    """Get NeuroImage files mask them, put all the data in a matrix and save them into
+    output_file together with mask shape and affine information and labels.
+
+    Will save into the file: data, mask_indices, vol_shape, labels
+
+        data: Numpy array with shape N x prod(vol.shape)
+              containing the N files as flat vectors.
+
+        mask_indices: matrix with indices of the voxels in the mask
+
+        vol_shape: Tuple with shape of the volumes, for reshaping.
+
+    Parameters
+    ----------
+    images: list of str or img-like object.
+        See boyle.nifti.NeuroImage constructor docstring.
+
+    mask: str or img-like object.
+        See boyle.nifti.NeuroImage constructor docstring.
+
+    labels: list or tuple of str or int or float.
+        This list shoule have the same length as images.
+        If None, will use the info in the rcfile config files.
+
+    subj_ids: list or tuple of str
+        This list shoule have the same length as images.
+        If None, will use the info in the rcfile config files.
+
+    smooth_fwhm: int
         FWHM size in mm of a Gaussian smoothing kernel to smooth the images before storage.
 
     output_file: str
@@ -575,38 +779,132 @@ def pack_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_var
     verbose: bool
         If verbose will show DEBUG log info.
     """
-    from boyle.nifti.sets import NiftiSubjectsSet
+    from boyle.nifti.sets import NeuroImageSet
 
     verbose_switch(verbose)
 
-    mask_file = None
-    if mask_file_varname:
-        mask_file = op.join(op.expanduser(CFG['std_dir']),  CFG[mask_file_varname])
-
-    labels_file = op.realpath(op.join(CFG['subj_labels']))
-    labels      = np.loadtxt(labels_file, dtype=int, delimiter='\n')
-
-    pipe_files = get_pipeline_files(root_dir, section_name, pipe_varname, file_name_varname)
-    pipe_files.sort()
-
-    if not pipe_files:
-        log.info('Could not find {} files from pipe {} within {} folder'.format(file_name_varname,
-                                                                                pipe_varname,
-                                                                                root_dir))
-        exit(-1)
-
-    log.debug('Parsing {} subjects into a Nifti file set.'.format(len(pipe_files)))
     try:
-        subj_set = NiftiSubjectsSet(pipe_files, mask_file, all_same_shape=True)
-        subj_set.set_labels(labels)
+        subj_set = NeuroImageSet(images, mask=mask_file, labels=labels, all_compatible=True)
+        subj_set.others['subj_ids'] = np.array(subj_ids)
     except:
-        log.exception('Error creating the set of subjects.')
+        raise
     else:
         log.debug('Saving masked data into file {}.'.format(output_file))
-        subj_set.to_file(output_file, smooth_mm, outdtype=None)
+        subj_set.to_file(output_file, smooth_fwhm=smooth_fwhm)
 
-    #outmat, mask_indices, mask_shape = niftilist_mask_to_array(pipe_files, mask_file)
-    #save file
-    #of = os.path.join(wd, 'cobre_' + ftypename + '_' + pipe.replace('/','.'))
-    #print ('Saving ' + of + '.npy')
-    #np.save(of + '.npy', feats)
+
+@task
+def pack_files(name, output_file, work_dir=DATA_DIR, mask_file=None, labels=None, subj_ids=None, smooth_fwhm=0,
+               verbose=False, filter_by_subject_ids=False):
+    """Pack a list of the files inside work_dir that match the regex value of the variable 'name' within the
+    files_of_interest section.
+
+    Parameters
+    ----------
+    name: str
+        Name of the variable in files_of_interest section.
+
+    work_dir: str
+        Path of the root folder from where to start the search.s
+
+    mask: str
+        RCfile variable name for the mask file that you want to use to mask the data.
+
+    labels: list or tuple of str or int or float.
+        This list shoule have the same length as images.
+        If None, will use the info in the rcfile config files.
+
+    subj_ids: list or tuple of str
+        This list shoule have the same length as images.
+        If None, will use the info in the rcfile config files.
+
+    smooth_fwhm: int
+        FWHM size in mm of a Gaussian smoothing kernel to smooth the images before storage.
+
+    output_file: str
+        Path to the output file. The extension of the file will be taken into account for the file format.
+        Choices of extensions: '.pyshelf' or '.shelf' (Python shelve)
+                               '.mat' (Matlab archive),
+                               '.hdf5' or '.h5' (HDF5 file)
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+    """
+    verbose_switch(verbose)
+
+    if mask_file is not None:
+        mask_file = op.join(op.expanduser(CFG['std_dir']),  CFG[mask_file])
+    if not op.exists(mask_file):
+        raise IOError('The mask file {} has not been found.'.format(mask_file))
+
+    try:
+        images = show_files(name, work_dir=work_dir, filter_by_subject_ids=filter_by_subject_ids)
+    except:
+        raise
+
+    subj_ids, labels = get_subject_ids_and_labels(filter_by_subject_ids)
+
+    if images:
+        _pack_files_to(images, output_file, mask_file=mask_file, labels=labels, subj_ids=subj_ids,
+                       smooth_fwhm=smooth_fwhm, verbose=verbose)
+
+
+@task
+def pack_my_files(rcpath, output_file, app_name=APPNAME, mask_file=None, labels=None, smooth_fwhm=0,
+                  verbose=False, filter_by_subject_ids=False):
+    """Pack a list of the files inside within the rcpath, i.e., a string with one '/', in the
+    format <variable of folder path>/<variable of files_of_interest regex>.
+
+    Parameters
+    ----------
+    rcpath: str
+        A path with one '/', in the format <variable of folder path>/<variable of files_of_interest regex>.
+        For example: 'data_dir/anat' will look for the folder path in the data_dir variable and the regex in the
+        anat variable inside the files_of_interest section.
+
+    app_name: str
+        Name of the app to look for the correspondent rcfile. Default: APPNAME (global variable)
+
+    mask_file: str
+        RCfile variable name for the mask file that you want to use to mask the data.
+
+    labels: list or tuple of str or int or float.
+        This list shoule have the same length as images.
+
+    smooth_fwhm: int
+        FWHM size in mm of a Gaussian smoothing kernel to smooth the images before storage.
+
+    output_file: str
+        Path to the output file. The extension of the file will be taken into account for the file format.
+        Choices of extensions: '.pyshelf' or '.shelf' (Python shelve)
+                               '.mat' (Matlab archive),
+                               '.hdf5' or '.h5' (HDF5 file)
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+    """
+    verbose_switch(verbose)
+
+    if mask_file is not None:
+        mask_file = op.join(op.expanduser(CFG['std_dir']),  CFG[mask_file])
+    if not op.exists(mask_file):
+        raise IOError('The mask file {} has not been found.'.format(mask_file))
+
+    try:
+        images = show_my_files(rcpath, app_name=app_name, filter_by_subject_ids=filter_by_subject_ids)
+    except:
+        raise
+
+    subj_ids, labels = get_subject_ids_and_labels(filter_by_subject_ids)
+
+    if images:
+        _pack_files_to(images, output_file, mask_file=mask_file, labels=labels, subj_ids=subj_ids,
+                       smooth_fwhm=smooth_fwhm, verbose=verbose)
