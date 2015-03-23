@@ -8,8 +8,8 @@ fsurf_dir     = ${root_dir}/freesurfer
 std_dir       = ${root_dir}/standard
 atlas_dir     = ${root_dir}/atlas
 cpac_conf     = cpac_conf/calm
-old_cobre_dir = /Volumes/chafs/data/cobre/cpac/out
-
+old_cobre_dir = /Volumes/chafs/data/cobre/cpac/out/sym_links
+exports_dir   = ~/Dropbox (Neurita)/projects/cobre
 
 [cobre:buccaneer]
 root_dir      = /data/cobre
@@ -48,25 +48,39 @@ old_cobre_dir = /media/alexandre/chafs/data/cobre/cpac/out
 # for l in $lst; do trgt=`readlink "$l"`; ln -fs "/media/alexandre/chafs/data${trgt#/media/alexandre/cobre*}" "$l"; done
 
 
+[standard]
+whole_3mm           = MNI152_T1_3mm.nii.gz
+brain_3mm           = MNI152_T1_3mm_brain.nii.gz
+brain_1mm           = MNI152_T1_1mm_brain.nii.gz
+brain_mask_3mm      = MNI152_T1_3mm_brain_mask.nii.gz
+brain_mask_1mm      = MNI152_T1_1mm_brain_mask.nii.gz
+brain_mask_dil_3mm  = MNI152_T1_3mm_brain_mask_dil.nii.gz
+brain_mask_dil_1mm  = MNI152_T1_1mm_brain_mask_dil.nii.gz
+
+[atlases]
+#atlases
+aal_1mm = aal_1mm.nii.gz
+aal_2mm = aal_2mm.nii.gz
+aal_3mm = aal_3mm.nii.gz
+aal_txt = aal.txt
+
+
 [cobre]
 version             = 0.2
-subj_id_regex       = (?P<subj_id>[0-9]{7})
 cpac_pipeline_file  = pipeline_config_cobre_wroclaw.yml
 cpac_subjects_list  = CPAC_subject_list_COBRE.yml
 docs_dir            = docs
 
-#diagnostic data
+# subject info and diagnostic data
+subj_id_regex       = (?P<subj_id>[0-9]{7})
+subj_id_list_file   = subject_list
 subj_labels         = ${docs_dir}/subj_diagnosis_labels.csv
 subj_scores         = ${docs_dir}/subj_diagnosis_scores.csv
 
 #reference list file: phenotypic data
 phenotypic_phenof   = ${docs_dir}/COBRE_phenotypic_data.csv
 
-#standard template files
-whole_3mm           = MNI152_T1_3mm.nii.gz
-brain_3mm           = MNI152_T1_3mm_brain.nii.gz
-brain_mask_3mm      = MNI152_T1_3mm_brain_mask.nii.gz
-brain_mask_dil_3mm  = MNI152_T1_3mm_brain_mask_dil.nii.gz
+out_aal_timeseries  = cobre_partitioned_timeseries.hdf5
 
 
 [old_cobre]
@@ -81,10 +95,15 @@ with_glob_nuis_corr = _compcor_ncomponents_5_linear1.global1.motion1.compcor1.CS
 no_glob_nuis_corr   = _compcor_ncomponents_5_linear1.motion1.compcor1.CSF_0.98_GM_0.7_WM_0.98
 
 # pipeline folders (absolute path exact match pattern)
-pipe_wtemp_wglob    = ^.*${with_temp_filtering}/${with_glob_nuis_corr}.*$$
-pipe_wtemp_noglob   = ^.*${with_temp_filtering}/${no_glob_nuis_corr}.*$$
-pipe_ntemp_wglob    = ^.*${no_temp_filtering}/${with_glob_nuis_corr}.*$$
-pipe_ntemp_noglob   = ^.*${no_temp_filtering}/${no_glob_nuis_corr}.*$$
+pipe_wtemp_wglob    = ${with_temp_filtering}/${with_glob_nuis_corr}
+pipe_wtemp_noglob   = ${with_temp_filtering}/${no_glob_nuis_corr}
+pipe_ntemp_wglob    = ${no_temp_filtering}/${with_glob_nuis_corr}
+pipe_ntemp_noglob   = ${no_temp_filtering}/${no_glob_nuis_corr}
+
+# features HDF5 files
+features_dir                  = features
+timeseries_feats_dir          = timeseries
+scalar_wtemp_noglob_feats_dir = scalar_wtpf_noglob
 
 
 [files_of_interest]
@@ -105,11 +124,36 @@ falffx            = falff_Z_to_standard_smooth.nii.gz
 
 funcfiltx         = functional_freq_filtered.nii.gz
 funcmnix          = functional_mni.nii.gz
-
+funcbrainmask     = functional_brain_mask.nii.gz
 grey_matter       = segment_pve_1.nii.gz
 
-mnitoanat_linx    = anatomical_to_mni_linear_xfm.mat
-mnitoanat_nonlinx = anatomical_to_mni_nonlinear_xfm.nii.gz
+mnitoanat_linx     = anatomical_to_mni_linear_xfm.mat
+mnitoanat_nonlinx  = anatomical_to_mni_nonlinear_xfm.nii.gz
 
-anattomni_linx    = mni_to_anatomical_linear_xfm.mat
-anattomni_nonlinx = mni_to_anatomical_nonlinear_xfm.nii.gz
+anattomni_linx     = mni_to_anatomical_linear_xfm.mat
+anattomni_nonlinx  = mni_to_anatomical_nonlinear_xfm.nii.gz
+
+
+[relative_paths]
+#transformation_files
+#anat_brain         = anatomical_brain/mprage_RPI_3dc.nii.gz
+#anat_to_mni_nl     = anatomical_to_mni_nonlinear_xfm/mprage_RPI_fieldwarp.nii.gz
+#anat_to_mni_nl_inv = anatomical_to_mni_nonlinear_xfm/mprage_RPI_fieldwarp_inv.nii.gz
+#anat_to_mni_mat    = anatomical_to_mni_linear_xfm/mprage_RPI_3dc_flirt.mat
+#anat_to_func_mat   = anatomical_to_functional_xfm/_scan_rest_1_rest/mprage_RPI_3dc_flirt.mat
+#mean_func          = mean_functional/_scan_rest_1_rest/rest_3dc_tshift_RPI_3dv_3dc_3dT.nii.gz
+#func_brain_mask    = functional_brain_mask/_scan_rest_1_rest/rest_3dc_tshift_RPI_3dv_automask.nii.gz
+
+#symlinks folder
+anat_to_mni_nl     = scan/anat/anatomical_to_mni_nonlinear_xfm.nii.gz
+anat_to_mni_nl_inv = scan/anat/anatomical_to_mni_nonlinear_xfm_inv.nii.gz
+anat_brain         = scan/anat/anatomical_brain.nii.gz
+anat_to_mni_mat    = scan/anat/anatomical_to_mni_linear_xfm.mat
+anat_to_func_mat   = scan_rest_1_rest/registration/anatomical_to_functional_xfm.mat
+mean_func          = scan_rest_1_rest/func/mean_functional.nii.gz
+func_freq_filtered = scan_rest_1_rest/func/bandpass_freqs_0.01.0.1/functional_freq_filtered.nii.gz
+func_brain_mask    = scan_rest_1_rest/func/functional_brain_mask.nii.gz
+
+#registered atlases
+aal_3mm_anat = aal_3mm_anatomical.nii.gz
+aal_3mm_func = aal_3mm_functional.nii.gz
