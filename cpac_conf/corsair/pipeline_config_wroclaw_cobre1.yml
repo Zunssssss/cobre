@@ -51,7 +51,7 @@ crashLogDirectory :  /home/alexandre/Data/cobre/cpac_wroclaw/log
 
 
 # Directory where CPAC should place processed data.
-outputDirectory :  //home/alexandre/Data/cobre/cpac_wroclaw/out
+outputDirectory :  /home/alexandre/Data/cobre/cpac_wroclaw/out
 
 
 # Create a user-friendly, well organized version of the output directory.
@@ -116,12 +116,12 @@ resolution_for_anat :  2mm
 
 # Template to be used during registration.
 # It is not necessary to change this path unless you intend to use a non-standard template.
-template_brain_only_for_anat :  $FSLDIR/data/standard/MNI152_T1_${resolution_for_anat}_brain.nii.gz
+template_brain_only_for_anat :  ${FSLDIR}/data/standard/MNI152_T1_${resolution_for_anat}_brain.nii.gz
 
 
 # Template to be used during registration.
 # It is not necessary to change this path unless you intend to use a non-standard template.
-template_skull_for_anat :  $FSLDIR/data/standard/MNI152_T1_${resolution_for_anat}.nii.gz
+template_skull_for_anat :  ${FSLDIR}/data/standard/MNI152_T1_${resolution_for_anat}.nii.gz
 
 
 # Use either ANTS or FSL (FLIRT and FNIRT) as your anatomical registration method.
@@ -388,7 +388,7 @@ voxelTSOutputs :  [False, False]
 # Register timeseries data to a surface model built by FreeSurfer.
 # Required to run vertex timeseries extraction. CPAC currently doesn't
 # fully support surface extraction. Not Recommended.
-runSurfaceRegistraion :  [1]
+runSurfaceRegistration :  [1]
 
 
 # Directory where FreeSurfer outputs surface data.
@@ -491,7 +491,7 @@ runReHo :  [1]
 # 7 (Faces)
 # 19 (Faces + Edges)
 # 27 (Faces + Edges + Corners)
-clusterSize :  0
+clusterSize :  7
 
 
 # Calculate Degree, Eigenvector Centrality, or Functional Connectivity Density.
@@ -558,7 +558,7 @@ memoryAllocatedForDegreeCentrality :  2.0
 # Full Width at Half Maximum of the Gaussian kernel used during spatial smoothing.
 # Can be a single value or multiple values separated by commas.
 # Note that spatial smoothing is run as the last step in the individual-level analysis pipeline, such that all derivatives are output both smoothed and unsmoothed.
-fwhm : [4]
+fwhm : [4, 8]
 
 
 # Run Bootstrap Analysis of Stable Clusters

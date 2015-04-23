@@ -1,6 +1,6 @@
-anatomicalTemplate  :  /home/asavio/cobre/raw/%s/%s/anat_1/mprage.nii.gz
+anatomicalTemplate  :  /home/alexandre/Data/cobre/raw/%s/%s/anat_1/mprage.nii.gz
 
-functionalTemplate  :  /home/asavio/cobre/raw/%s/%s/rest_1/rest.nii.gz
+functionalTemplate  :  /home/alexandre/Data/cobre/raw/%s/%s/rest_1/rest.nii.gz
 
 subjectList  :  None
 
