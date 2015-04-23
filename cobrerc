@@ -177,4 +177,4 @@ aal_3mm_anat = aal_3mm_anatomical.nii.gz
 aal_3mm_func = aal_3mm_functional.nii.gz
 
 yeo_3mm_anat = yeo_3mm_anatomical.nii.gz
-yeo_3mm_func = yeo_3mm_functiona.nii.gz
+yeo_3mm_func = yeo_3mm_functional.nii.gz
