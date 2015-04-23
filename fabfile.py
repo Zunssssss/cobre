@@ -25,8 +25,9 @@ import shutil
 import logging
 import os.path                  as     op
 import numpy                    as     np
-import subprocess
+from   functools                import partial
 from   subprocess               import Popen, PIPE
+from   collections              import OrderedDict
 
 from   boyle.mhd.write          import copy_mhd_and_raw
 from   boyle.commands           import which
@@ -44,9 +45,6 @@ from   boyle.storage            import save_variables_to_hdf5
 from   invoke                   import task
 from   invoke                   import run as local
 
-# my own system call
-from functools import partial
-call = partial(subprocess.call, shell=True)
 
 # setup log
 logging.basicConfig(level=logging.INFO)
@@ -585,8 +583,8 @@ def show_my_files(rcpath, app_name=APPNAME, filter_by_subject_ids=False):
 @task
 def clean():
     """Remove a few temporal files and logs in this folder."""
-    call('rm *.log')
-    call('rm *.pyc')
+    local('rm *.log')
+    local('rm *.pyc')
     shutil.rmtree('__pycache__')
 
 
@@ -684,13 +682,13 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=Fa
 
 
 @task
-def run_cpac(verbose=False):
+def run_cpac(cpac_pipeline_file_varname='cpac_pipeline_file', verbose=False):
     """Execute cpac_run.py using the configuration from the rcfile"""
 
     try:
-        conf_dir      = op.realpath(op.join(op.dirname(__file__), CFG['cpac_conf']))
-        subjects_list = op.realpath(op.join(conf_dir, CFG['cpac_subjects_list']))
-        pipeline_file = op.realpath(op.join(conf_dir, CFG['cpac_pipeline_file']))
+        conf_dir      = op.realpath(op.join(op.dirname(__file__), CFG['cpac_conf']               ))
+        subjects_list = op.realpath(op.join(conf_dir,             CFG['cpac_subjects_list']      ))
+        pipeline_file = op.realpath(op.join(conf_dir,             CFG[cpac_pipeline_file_varname]))
     except KeyError as ke:
         log.exception(ke)
         raise
@@ -1579,11 +1577,73 @@ def register_atlas_to_functionals(work_dir=PREPROC_DIR, atlas='aal_3mm', section
                                 rewrite=False, parallel=parallel)
 
 
+@task(autoprint=True)
+def get_atlaspartition_hdf5path(subj_id, pipe_varname='pipe_wtemp_noglob', atlas='aal_3mm_func'):
+    """ Return the hdf5 path for the atlas partition for the subject timeseries in the pipeline.
+
+    Parameters
+    ----------
+    pipe_varname:
+        Pipeline variable name.
+
+    atlas:
+        Atlas variable name
+
+    subj_id: str
+        Subject ID
+
+    Returns
+    -------
+    hdf5path: str
+    """
+    return '/{}_{}_timeseries/{}'.format(pipe_varname, atlas, subj_id)
+
+
+@task(autoprint=True)
+def get_atlaspartition_hdf5_filepath(atlas='aal_3mm_func', app_name=APPNAME):
+    """ Return the path of the HDF5 file which contains the atlas partition timeseries.
+
+    atlas: str
+        Atlas variable name
+
+    app_name: str
+
+    Returns
+    -------
+    hdf5_filepath: str
+    """
+    if atlas == 'atlas_3mm_func':
+        return op.join(EXPORTS_DIR, get_rcfile_variable_value('out_aal_timeseries', app_name=app_name))
+    else:
+        raise ValueError('Expected the name of a valid atlas variable name as `atlas_3mm_func`, '
+                         'but got {}.'.format(atlas))
+
+
+@task(autoprint=True)
+def get_connectivity_hdf5_filepath(atlas='aal_3mm_func', app_name=APPNAME):
+    """ Return the path of the HDF5 file which contains the connectivity matrices.
+
+    atlas: str
+        Atlas variable name
+
+    app_name: str
+
+    Returns
+    -------
+    hdf5_filepath: str
+    """
+    if atlas == 'atlas_3mm_func':
+        return op.join(EXPORTS_DIR, get_rcfile_variable_value('out_aal_connectivities', app_name=app_name))
+    else:
+        raise ValueError('Expected the name of a valid atlas variable name as `atlas_3mm_func`, '
+                         'but got {}.'.format(atlas))
+
+
 @task
-def create_atlas_timeseries_packs(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
-                                  pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
-                                  filter_by_subject_ids=False):
-    """Apply the existent transformation from MNI standard to functional MRI to an atlas image in MNI space.
+def save_atlas_timeseries_packs(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
+                                pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
+                                filter_by_subject_ids=False):
+    """ Save the atlas partitioned timeseries into an HDF5 file.
 
     Parameters
     ----------
@@ -1615,6 +1675,63 @@ def create_atlas_timeseries_packs(work_dir=PREPROC_DIR, atlas='aal_3mm_func', se
     """
     verbose_switch(verbose)
 
+    subj_timeseries = atlas_partition_timeseries(work_dir=work_dir, atlas=atlas, section_name=section_name,
+                                                 pipe_varname=pipe_varname, app_name=app_name, verbose=verbose,
+                                                 filter_by_subject_ids=filter_by_subject_ids)
+
+    timeseries_filepath = get_atlaspartition_hdf5_filepath(atlas, app_name=app_name)
+
+    for subj_id in subj_timeseries:
+        # save_ts_pack into HDF file.
+        h5path = get_atlaspartition_hdf5path(subj_id, pipe_varname=pipe_varname, atlas=atlas)
+
+        log.debug('Saving {} {} partitioned functional timeseries in '
+                  '{} group {}.'.format(subj_id, atlas, timeseries_filepath, h5path))
+
+        save_variables_to_hdf5(timeseries_filepath, {'{}_timeseries'.format(atlas): subj_timeseries[subj_id]}, mode='a',
+                               h5path=h5path)
+
+
+def atlas_partition_timeseries(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
+                               pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
+                               filter_by_subject_ids=False):
+    """ Return a dictionary with each subject's timeseries partitioned by the atlas file.
+
+    Parameters
+    ----------
+    work_dir: str
+        A real file path or a RCfile variable name which indicates where to start looking for files.
+        Note: be sure that if you want it a variable name, don't have a folder with the same name near this script.
+
+    atlas: str
+        Files of intereste variable name or file path to a 3D atlas volume.
+
+    section_name: str
+        RCfile section name to get the pipe_varname and also look for root_dir if needed.
+
+    pipe_varname: str
+        RCfile variable name for the pipeline pattern to match and filter the full paths of the found files.
+
+    verbose: bool
+        If verbose will show DEBUG log messages.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+
+    app_name: str
+        Name of the app to look for the correspondent rcfile. Default: APPNAME (global variable)
+
+    Returns
+    -------
+    subj_timeseries: dict
+
+    """
+    verbose_switch(verbose)
+
     #read relative filepaths
     subj_folders = get_subject_folders(work_dir=work_dir, section_name=section_name, pipe_varname=pipe_varname,
                                        app_name=app_name, verbose=verbose, filter_by_subject_ids=filter_by_subject_ids,
@@ -1622,8 +1739,7 @@ def create_atlas_timeseries_packs(work_dir=PREPROC_DIR, atlas='aal_3mm_func', se
 
     ids, _ = get_subject_ids_and_labels(filter_by_subject_ids=filter_by_subject_ids)
 
-    timeseries_filepath = op.join(EXPORTS_DIR, get_rcfile_variable_value('out_aal_timeseries', app_name=app_name))
-
+    subj_timeseries = OrderedDict()
     for idx, subj_path in enumerate(subj_folders):
         subj_id = ids[idx]
 
@@ -1637,19 +1753,93 @@ def create_atlas_timeseries_packs(work_dir=PREPROC_DIR, atlas='aal_3mm_func', se
         subj_atlas_ts = partition_timeseries(functional, atlas_in_func, funcbrainmask, zeroe=True, roi_values=None,
                                              outdict=True)
 
-        # save_ts_pack into HDF file.
-        h5path = '/pipe_{}_{}_timeseries/{}'.format(pipe_varname, atlas, subj_id)
+        subj_timeseries[subj_id] = subj_atlas_ts
 
-        log.debug('Saving {} {} partitioned functional timeseries in '
-                  '{} group {}.'.format(subj_id, atlas, timeseries_filepath, h5path))
-
-        save_variables_to_hdf5(timeseries_filepath, {'{}_timeseries'.format(atlas): subj_atlas_ts}, mode='a',
-                               h5path=h5path)
+    return subj_timeseries
 
 
-#@task
-#def create_connectivity_packs(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
-#                              pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
-#                              filter_by_subject_ids=False):
+@task
+def save_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
+                               pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
+                               filter_by_subject_ids=False):
+    """ Save the connectivity matrices of with each subject's timeseries partitioned by the atlas file into an HDF5
+    file.
+    The file will be saved in exports
 
-#    timeseries_filepath = op.join(EXPORTS_DIR, get_rcfile_variable_value('out_aal_timeseries', app_name=app_name))
+    Parameters
+    ----------
+    work_dir: str
+        A real file path or a RCfile variable name which indicates where to start looking for files.
+        Note: be sure that if you want it a variable name, don't have a folder with the same name near this script.
+
+    atlas: str
+        Files of intereste variable name or file path to a 3D atlas volume.
+
+    section_name: str
+        RCfile section name to get the pipe_varname and also look for root_dir if needed.
+
+    pipe_varname: str
+        RCfile variable name for the pipeline pattern to match and filter the full paths of the found files.
+
+    verbose: bool
+        If verbose will show DEBUG log messages.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+
+    app_name: str
+        Name of the app to look for the correspondent rcfile. Default: APPNAME (global variable)
+
+    """
+# connectitity_filepath = get_connectivity_hdf5_filepath(atlas, app_name=APPNAME)
+
+
+def create_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
+                                 pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
+                                 filter_by_subject_ids=False):
+    """ Return a dictionary with each subject's timeseries partitioned by the atlas file.
+
+    Parameters
+    ----------
+    work_dir: str
+        A real file path or a RCfile variable name which indicates where to start looking for files.
+        Note: be sure that if you want it a variable name, don't have a folder with the same name near this script.
+
+    atlas: str
+        Files of intereste variable name or file path to a 3D atlas volume.
+
+    section_name: str
+        RCfile section name to get the pipe_varname and also look for root_dir if needed.
+
+    pipe_varname: str
+        RCfile variable name for the pipeline pattern to match and filter the full paths of the found files.
+
+    verbose: bool
+        If verbose will show DEBUG log messages.
+
+    filter_by_subject_ids: bool
+        If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+        and let only matches to the subject ID list values.
+
+    verbose: bool
+        If verbose will show DEBUG log info.
+
+    app_name: str
+        Name of the app to look for the correspondent rcfile. Default: APPNAME (global variable)
+
+    Returns
+    -------
+    subj_timeseries: dict
+
+    """
+# h5path = get_atlaspartition_hdf5path(subj_id, pipe_varname=pipe_varname, atlas=atlas)
+# timeseries_filepath   = get_atlaspartition_hdf5_filepath(atlas, app_name=app_name)
+# connectitity_filepath = get_connectivity_hdf5_filepath(atlas, app_name=APPNAME)
+
+load_variables_from_hdf5
+
+ts = h5py.File('/Users/alexandre/Dropbox (Neurita)/projects/cobre/cobre_partitioned_timeseries.hdf5')
