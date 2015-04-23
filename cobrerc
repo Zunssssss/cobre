@@ -11,6 +11,20 @@ cpac_conf     = cpac_conf/calm
 old_cobre_dir = /Volumes/chafs/data/cobre/cpac/out/sym_links
 exports_dir   = ~/Dropbox (Neurita)/projects/cobre
 
+
+[cobre:corsair]
+root_dir      = ~/Data/cobre
+cache_dir     = ${root_dir}/cache
+raw_dir       = ${root_dir}/raw
+preproc_dir   = ${root_dir}/preprocess
+fsurf_dir     = ${root_dir}/freesurfer
+std_dir       = ${root_dir}/standard
+atlas_dir     = ${root_dir}/atlas
+cpac_conf     = cpac_conf/corsair
+old_cobre_dir = ~/Data/cobre/cpac/out/sym_links
+exports_dir   = ~/Dropbox (Neurita)/projects/cobre
+
+
 [cobre:buccaneer]
 root_dir      = /data/cobre
 cache_dir     = ${root_dir}/cache
@@ -57,6 +71,7 @@ brain_mask_1mm      = MNI152_T1_1mm_brain_mask.nii.gz
 brain_mask_dil_3mm  = MNI152_T1_3mm_brain_mask_dil.nii.gz
 brain_mask_dil_1mm  = MNI152_T1_1mm_brain_mask_dil.nii.gz
 
+
 [atlases]
 #atlases
 aal_1mm = aal_1mm.nii.gz
@@ -64,6 +79,8 @@ aal_2mm = aal_2mm.nii.gz
 aal_3mm = aal_3mm.nii.gz
 aal_txt = aal.txt
 
+yeo11_17nets_thick_1mm = nilearn_data/yeo_2011/Yeo2011_17Networks_MNI152_FreeSurferConformed1mm_LiberalMask.nii.gz
+yeo11_17nets_thin_1mm  = nilearn_data/yeo_2011/Yeo2011_17Networks_MNI152_FreeSurferConformed1mm.nii.gz
 
 [cobre]
 version             = 0.2
@@ -80,7 +97,8 @@ subj_scores         = ${docs_dir}/subj_diagnosis_scores.csv
 #reference list file: phenotypic data
 phenotypic_phenof   = ${docs_dir}/COBRE_phenotypic_data.csv
 
-out_aal_timeseries  = cobre_partitioned_timeseries.hdf5
+out_aal_timeseries     = cobre_partitioned_timeseries.hdf5
+out_aal_connectivities = cobre_connectivities.hdf5
 
 
 [old_cobre]
@@ -157,3 +175,6 @@ func_brain_mask    = scan_rest_1_rest/func/functional_brain_mask.nii.gz
 #registered atlases
 aal_3mm_anat = aal_3mm_anatomical.nii.gz
 aal_3mm_func = aal_3mm_functional.nii.gz
+
+yeo_3mm_anat = yeo_3mm_anatomical.nii.gz
+yeo_3mm_func = yeo_3mm_functiona.nii.gz
