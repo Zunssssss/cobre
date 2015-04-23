@@ -64,3 +64,9 @@ devdoc/
 
 #OSX shit
 .DS_Store
+
+#ipynb tempfiles
+.ipynb*
+
+# images
+*.png
