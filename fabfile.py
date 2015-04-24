@@ -695,9 +695,13 @@ def run_cpac(cpac_pipeline_file_varname='cpac_pipeline_file', verbose=False):
 
     verbose_switch(verbose)
 
-    cpac_path = which('cpac_run.py')
+    cpac_cmd  = 'cpac_run.py'
+    cpac_path = which(cpac_cmd)
+    if cpac_path is None:
+        log.error('Could not find {} command.'.format(cpac_cmd))
+        return -1
 
-    cmd = '{} {} {}'.format(cpac_path, pipeline_file, subjects_list)
+    cmd = '"{}" "{}" "{}"'.format(cpac_path, pipeline_file, subjects_list)
     log.debug('Calling: {}'.format(cmd))
     log.info ('Logging to cpac.log')
 
