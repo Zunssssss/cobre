@@ -1758,10 +1758,10 @@ def atlas_partition_timeseries(work_dir=PREPROC_DIR, atlas='aal_3mm_func', secti
     return subj_timeseries
 
 
-@task
-def save_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
-                               pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
-                               filter_by_subject_ids=False):
+#@task
+#def save_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
+#                               pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
+#                               filter_by_subject_ids=False):
     """ Save the connectivity matrices of with each subject's timeseries partitioned by the atlas file into an HDF5
     file.
     The file will be saved in exports
@@ -1798,14 +1798,14 @@ def save_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', secti
 # connectitity_filepath = get_connectivity_hdf5_filepath(atlas, app_name=APPNAME)
 
 
-def create_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
-                                 pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
-                                 filter_by_subject_ids=False):
+#def create_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', section_name='old_cobre',
+#                                 pipe_varname='pipe_wtemp_noglob', app_name=APPNAME, verbose=False,
+#                                 filter_by_subject_ids=False):
     """ Return a dictionary with each subject's timeseries partitioned by the atlas file.
 
     Parameters
     ----------
-    work_dir: str
+#    work_dir: str
         A real file path or a RCfile variable name which indicates where to start looking for files.
         Note: be sure that if you want it a variable name, don't have a folder with the same name near this script.
 
@@ -1840,6 +1840,6 @@ def create_connectivity_matrices(work_dir=PREPROC_DIR, atlas='aal_3mm_func', sec
 # timeseries_filepath   = get_atlaspartition_hdf5_filepath(atlas, app_name=app_name)
 # connectitity_filepath = get_connectivity_hdf5_filepath(atlas, app_name=APPNAME)
 
-load_variables_from_hdf5
+#load_variables_from_hdf5
 
-ts = h5py.File('/Users/alexandre/Dropbox (Neurita)/projects/cobre/cobre_partitioned_timeseries.hdf5')
+#ts = h5py.File('/Users/alexandre/Dropbox (Neurita)/projects/cobre/cobre_partitioned_timeseries.hdf5')
