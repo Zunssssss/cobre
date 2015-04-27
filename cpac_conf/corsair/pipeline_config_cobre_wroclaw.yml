@@ -39,7 +39,7 @@ num_ants_threads :  1
 
 
 # Name for this pipeline configuration - useful for identification.
-pipelineName :  wroclaw_cobre1
+pipelineName :  cobre_wroclaw
 
 
 # Directory where CPAC should store temporary and intermediate files.
@@ -388,7 +388,7 @@ voxelTSOutputs :  [False, False]
 # Register timeseries data to a surface model built by FreeSurfer.
 # Required to run vertex timeseries extraction. CPAC currently doesn't
 # fully support surface extraction. Not Recommended.
-runSurfaceRegistration :  [1]
+runSurfaceRegistraion :  [1]
 
 
 # Directory where FreeSurfer outputs surface data.

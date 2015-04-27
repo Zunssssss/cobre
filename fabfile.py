@@ -618,6 +618,69 @@ def get_standard_file(file_name_varname,  app_name=APPNAME):
 
     return std_path
 
+#
+# @task
+# def create_cpac_subj_list(anat_file_var='raw_anat', rest_files_vars=['raw_rest'],
+#                           output='CPAC_subject_list_file.yaml',
+#                           filter_by_subject_ids=False, verbose=False):
+#     """Create a C-PAC subject list file including the path to the files represented by the variables in
+#     conf_variables.
+#
+#     Parameters
+#     ----------
+#     anat_file_var: str
+#         Variable name in the application rcfiles which hold the name of the subject anatomical file.
+#
+#     rest_files_vars: list of str
+#         List of variable names in the application rcfiles which hold the name of the subject fMRI files.
+#
+#     output: str
+#         Path of the output file
+#
+#     filter_by_subject_ids: bool
+#         If True will read the file defined by subj_id_list_file variable in the rcfile and filter the resulting list
+#         and let only matches to the subject ID list values.
+#
+#     verbose: bool
+#         If True will show debug logs.
+#     """
+#     import yaml
+#
+#
+
+
+
+@task
+def run_cpac(cpac_pipeline_file_varname='cpac_pipeline_file', verbose=False):
+    """Execute cpac_run.py using the configuration from the rcfile"""
+
+    try:
+        conf_dir      = op.realpath(op.join(op.dirname(__file__), CFG['cpac_conf']               ))
+        subjects_list = op.realpath(op.join(conf_dir,             CFG['cpac_subjects_list']      ))
+        pipeline_file = op.realpath(op.join(conf_dir,             CFG[cpac_pipeline_file_varname]))
+    except KeyError as ke:
+        log.exception(ke)
+        raise
+
+    verbose_switch(verbose)
+
+    cpac_cmd  = 'cpac_run.py'
+    cpac_path = which(cpac_cmd)
+    if cpac_path is None:
+        log.error('Could not find {} command.'.format(cpac_cmd))
+        return -1
+
+    if op.exists('cpac.log'):
+        log.debug('Remove cpac.log file.')
+        os.remove('cpac.log')
+
+    cmd = '"{}" "{}" "{}"'.format(cpac_path, pipeline_file, subjects_list)
+    log.debug('Calling: {}'.format(cmd))
+    log.info ('Logging to cpac.log')
+
+    # print('import CPAC')
+    # print('CPAC.pipeline.cpac_runner.run("{}", "{}")'.format(pipeline_file, subjects_list))
+    call_and_logit(cmd, 'cpac.log')
 
 # ----------------------------------------------------------------------------------------------------------------------
 # COBRE PROJECT SPECIFIC FUNCTIONS
@@ -679,35 +742,6 @@ def recon_all(input_dir=RAW_DIR, out_dir=FSURF_DIR, use_cluster=True, verbose=Fa
 
         log.debug('Calling {}'.format(cmd))
         call_and_logit(cmd, 'freesurfer_{}.log'.format(subj_id))
-
-
-@task
-def run_cpac(cpac_pipeline_file_varname='cpac_pipeline_file', verbose=False):
-    """Execute cpac_run.py using the configuration from the rcfile"""
-
-    try:
-        conf_dir      = op.realpath(op.join(op.dirname(__file__), CFG['cpac_conf']               ))
-        subjects_list = op.realpath(op.join(conf_dir,             CFG['cpac_subjects_list']      ))
-        pipeline_file = op.realpath(op.join(conf_dir,             CFG[cpac_pipeline_file_varname]))
-    except KeyError as ke:
-        log.exception(ke)
-        raise
-
-    verbose_switch(verbose)
-
-    cpac_cmd  = 'cpac_run.py'
-    cpac_path = which(cpac_cmd)
-    if cpac_path is None:
-        log.error('Could not find {} command.'.format(cpac_cmd))
-        return -1
-
-    cmd = '"{}" "{}" "{}"'.format(cpac_path, pipeline_file, subjects_list)
-    log.debug('Calling: {}'.format(cmd))
-    log.info ('Logging to cpac.log')
-
-    # print('import CPAC')
-    # print('CPAC.pipeline.cpac_runner.run("{}", "{}")'.format(pipeline_file, subjects_list))
-    call_and_logit(cmd, 'cpac.log')
 
 
 def show_pipeline_files(root_dir=PREPROC_DIR, section_name='old_cobre', pipe_varname='pipe_wtemp_wglob',

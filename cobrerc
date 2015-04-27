@@ -1,6 +1,6 @@
 
 [cobre:calm.local]
-root_dir      = ~/data/cobre
+root_dir      = /Volumes/chafs/data/cobre
 cache_dir     = ${root_dir}/cache
 raw_dir       = ${root_dir}/raw
 preproc_dir   = ${root_dir}/preprocess
