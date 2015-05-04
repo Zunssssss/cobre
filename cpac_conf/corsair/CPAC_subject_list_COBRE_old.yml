@@ -1,0 +1,888 @@
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040000/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040000/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040001/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040001/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040002/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040002/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040003/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040003/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040004/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040004/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040005/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040005/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040006/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040006/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040007/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040007/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040008/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040008/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040009/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040009/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040010/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040010/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040011/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040011/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040012/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040012/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040013/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040013/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040014/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040014/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040015/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040015/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040016/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040016/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040017/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040017/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040018/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040018/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040019/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040019/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040020/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040020/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040021/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040021/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040022/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040022/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040023/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040023/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040024/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040024/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040025/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040025/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040026/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040026/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040027/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040027/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040028/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040028/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040029/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040029/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040030/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040030/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040031/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040031/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040032/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040032/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040033/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040033/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040034/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040034/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040035/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040035/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040036/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040036/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040037/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040037/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040038/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040038/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040039/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040039/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040040/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040040/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040041/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040041/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040042/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040042/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040043/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040043/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040044/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040044/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040045/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040045/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040046/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040046/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040047/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040047/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040048/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040048/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040049/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040049/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040050/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040050/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040051/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040051/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040052/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040052/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040053/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040053/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040054/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040054/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040055/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040055/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040056/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040056/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040057/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040057/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040058/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040058/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040059/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040059/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040060/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040060/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040061/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040061/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040062/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040062/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040063/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040063/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040064/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040064/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040065/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040065/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040066/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040066/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040067/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040067/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040068/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040068/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040069/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040069/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040070/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040070/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040071/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040071/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040072/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040072/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040073/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040073/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040074/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040074/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040075/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040075/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040076/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040076/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040077/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040077/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040078/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040078/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040079/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040079/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040080/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040080/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040081/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040081/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040082/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040082/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040083/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040083/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040084/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040084/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040085/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040085/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040086/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040086/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040087/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040087/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040088/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040088/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040089/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040089/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040090/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040090/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040091/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040091/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040092/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040092/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040093/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040093/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040094/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040094/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040095/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040095/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040096/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040096/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040097/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040097/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040098/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040098/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040099/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040099/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040100/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040100/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040101/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040101/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040102/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040102/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040103/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040103/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040104/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040104/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040105/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040105/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040106/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040106/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040107/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040107/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040108/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040108/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040109/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040109/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040110/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040110/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040111/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040111/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040112/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040112/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040113/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040113/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040114/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040114/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040115/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040115/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040116/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040116/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040117/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040117/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040118/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040118/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040119/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040119/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040120/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040120/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040121/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040121/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040122/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040122/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040123/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040123/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040124/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040124/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040125/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040125/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040126/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040126/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040127/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040127/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040128/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040128/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040129/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040129/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040130/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040130/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040131/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040131/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040132/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040132/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040133/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040133/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040134/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040134/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040135/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040135/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040136/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040136/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040137/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040137/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040138/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040138/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040139/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040139/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040140/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040140/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040141/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040141/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040142/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040142/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040143/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040143/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040144/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040144/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040145/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040145/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040146/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040146/session_1/rest_1/rest.nii.gz'
+-
+    subject_id: 'session_1'
+    unique_id: ''
+    anat: '/home/alexandre/Data/cobre/raw/0040147/session_1/anat_1/mprage.nii.gz'
+    rest:
+      rest_1_rest: '/home/alexandre/Data/cobre/raw/0040147/session_1/rest_1/rest.nii.gz'
