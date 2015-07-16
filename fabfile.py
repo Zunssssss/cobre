@@ -1543,7 +1543,8 @@ def slicesdir(underlying, outline=None, work_dir=PREPROC_DIR, section_name='old_
 
 
 @task(autoprint=True)
-def register_atlas_to_functionals(work_dir=PREPROC_DIR, atlas='aal_3mm', section_name='old_cobre',
+def register_atlas_to_functionals(work_dir=PREPROC_DIR, atlas='aal_3mm', anat_out_var='aal_3mm_anat',
+                                  func_out_var='aal_3mm_func', section_name='old_cobre',
                                   pipe_varname='pipe_wtemp_noglob', verbose=False, filter_by_subject_ids=False,
                                   parallel=False, app_name=APPNAME):
     """Apply the existent transformation from MNI standard to functional MRI to an atlas image in MNI space.
@@ -1556,6 +1557,14 @@ def register_atlas_to_functionals(work_dir=PREPROC_DIR, atlas='aal_3mm', section
 
     atlas: str
         Files of intereste variable name or file path to a 3D atlas volume.
+
+    anat_out_var: str
+        Variable name that holds the file name of the resulting registered atlas in a specific subject functional
+        space.
+
+    func_out_var: str
+        Variable name that holds the file name of the resulting registered atlas in a specific subject functional
+        space.
 
     section_name: str
         RCfile section name to get the pipe_varname and also look for root_dir if needed.
@@ -1602,8 +1611,8 @@ def register_atlas_to_functionals(work_dir=PREPROC_DIR, atlas='aal_3mm', section
         atlas2anat_nlin = find_subject_file_and_check('anat_to_mni_nl'  )
         anat2func_lin   = find_subject_file_and_check('anat_to_func_mat')
 
-        atlas_in_anat   = get_subject_file('aal_3mm_anat', subj_dir=subj_path, check_exists=False)
-        atlas_in_func   = get_subject_file('aal_3mm_func', subj_dir=subj_path, check_exists=False)
+        atlas_in_anat   = get_subject_file(anat_out_var, subj_dir=subj_path, check_exists=False)
+        atlas_in_func   = get_subject_file(func_out_var, subj_dir=subj_path, check_exists=False)
 
         log.debug('Registering atlas to functional: {}.\n'.format(' ,'.join([anat_brain, avg_func, atlas2anat_lin,
                                                                              atlas2anat_nlin, anat2func_lin,
